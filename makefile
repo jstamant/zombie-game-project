@@ -1,3 +1,7 @@
+#
+#-- Project configuration --#
+#
+
 BINARY = sfml-app.out
 
 # Compiler options and flags
@@ -5,9 +9,12 @@ CXX = g++
 CXXFLAGS = -Wall -Wno-switch -g
 DFLAGS = -MM
 
+# Path to source files directory
+SRC_DIR = src
 # Path to include directory
-# TODO improve this?
 INCLUDE_DIR = ./include
+# Path to build files directory
+OBJ_DIR = obj
 
 # Libraries required for linking
 LIBS = -lsfml-graphics -lsfml-system -lsfml-window
@@ -15,16 +22,28 @@ LIBS = -lsfml-graphics -lsfml-system -lsfml-window
 # Run Options
 #COMMANDLINE_OPTIONS = /dev/ttyS0
 
+#
 #-- Directory structure and files --#
+#
 
 # Subdirs to search for additional source files
+#vpath %.cpp $(SRC_DIR)
+#vpath %.h   $(INCLUDE_DIR)
+#vpath %.o   $(OBJ_DIR)
 SUBDIRS := $(shell ls -F | grep "\/" )
 DIRS := ./ $(SUBDIRS)
-SRC_FILES := $(foreach d, $(DIRS), $(wildcard $(d)*.cpp))
-OBJECTS = $(patsubst %.cpp, %.o, $(SRC_FILES))
-DEPENDENCIES = $(patsubst %.cpp, %.d, $(SRC_FILES))
+#SRC_FILES := $(foreach d, $(DIRS), $(wildcard $(d)*.cpp))
+#OBJECTS = $(patsubst %.cpp, %.o, $(SRC_FILES))
+#DEPENDENCIES = $(patsubst %.cpp, %.d, $(SRC_FILES))
 
+SRC_FILES = $(shell find $(SRC_DIR) -type f -name *.cpp)
+#Can these two be simplified with $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.d, $(SRC_FILES))???
+OBJECTS = $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%, $(SRC_FILES:.cpp=.o))
+DEPENDENCIES = $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%, $(SRC_FILES:.cpp=.d))
+
+#
 #-- Rules --#
+#
 
 all: $(BINARY)
 
@@ -32,11 +51,13 @@ $(BINARY): $(OBJECTS) $(DEPENDENCIES)
 	$(CXX) -o $(BINARY) $(OBJECTS) $(LIBS)
 
 # Produce all object files
-%.o: %.cpp
+#$(OBJ_DIR)/%.o: %.cpp
+$(OBJECTS): $(SRC_FILES)
 	$(CXX) $(CXXFLAGS) -c $< -o $@ -I $(INCLUDE_DIR)
 
 # Create .d files
-%.d: %.cpp
+#%.d: %.cpp
+$(DEPENDENCIES): $(SRC_FILES)
 # $(CXX) $(DFLAGS) $< -MT "$*.o $*.d" -MF $*.d
 	$(CXX) $(DFLAGS) $< -MT "$*.o $*.d" -MF "$*.d" -I $(INCLUDE_DIR)
 
