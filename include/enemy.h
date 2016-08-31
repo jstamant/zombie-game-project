@@ -1,13 +1,16 @@
-//enemy.h
+#ifndef _ENEMY_H
+#define _ENEMY_H
 
-//TODO ADD A HEADER GUARD
-
+//Include dependencies
 #include "character.h"
+#include "subject.h"
 
-class Enemy: public Drawable
+class Enemy: public Drawable, public Subject
 {
     public:
-        Enemy();
+        Enemy(Observer*);
         void seek_player(Character*);
 };
+
+#endif
 

@@ -13,8 +13,12 @@
 
 #define MAX_BULLETS 2
 
-//#define MAX_OBSERVERS 2
+#define MAX_OBSERVERS 2
 
+enum Event
+{
+    REQUEST_CHARACTER_POSITION
+};
 
 #endif
 
