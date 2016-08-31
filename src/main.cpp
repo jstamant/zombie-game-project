@@ -1,29 +1,28 @@
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
 
-//Include classes
-#include "character.h"
-#include "enemy.h"
-#include "inputhandler.h"
-
 //Include dependencies
+#include "character.h"
 #include "defines.h"
+#include "enemy.h"
+#include "entitymanager.h"
+#include "inputhandler.h"
 #include <vector>
-
 
 int main()
 {
-    //Define core ressources
+    //Define core resources
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_CAPTION);
     InputHandler input_handler(&window);
     std::vector<Command*> command;
     sf::Mouse mouse;
+    EntityManager entitymanager;
 
     window.setFramerateLimit(FRAMELIMIT);
 
     //Create some test entities
     Character character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, &window, &mouse);
-    Enemy enemy;
+    Enemy enemy(&entitymanager);
 
     while (window.isOpen())
     {
@@ -37,7 +36,6 @@ int main()
             command.pop_back();
         }
 
-        //Set character position and rotation
         enemy.seek_player(&character);
 
         window.clear(sf::Color(192, 192, 192));
