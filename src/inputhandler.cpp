@@ -5,6 +5,9 @@
 #include "inputhandler.h"
 #include <vector>
 
+//DEBUG
+#include <iostream>
+
 InputHandler::InputHandler(sf::RenderWindow* source_window) {
     window = source_window;
     mouse_movement = &mouse_movement_command;
@@ -22,24 +25,19 @@ std::vector<Command*> InputHandler::handle_input(void) {
     //First, process the SFML event queue
     while (window->pollEvent(event)) {
         if (event.type == sf::Event::Closed)
-            //TODO move this command out of this class
             window->close();
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Escape)
+                window->close();
+        }
         if (event.type == sf::Event::MouseMoved) {
             input_queue.push_back(mouse_movement);
         }
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 //Perform character shooting
-                //character.shoot();
-                /*//OLD Perform character shooting
-                if (bullet_counter < MAX_BULLETS) {
-                    *p_bullet++ = Bullet(character);
-                    bullet_counter++;
-                }else{
-                    p_bullet = bullets;
-                    *p_bullet++ = Bullet(character);
-                    bullet_counter = 0;
-                }*/
+                //DEBUG
+                std::cout << "Pow!\n";
             }
         }
     }
