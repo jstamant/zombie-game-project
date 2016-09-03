@@ -11,8 +11,8 @@ class Character: public Drawable
         Character();
         Character(int, int, sf::RenderWindow*, sf::Mouse*);
         void set_pos(int, int);
-        int get_x(void);
-        int get_y(void);
+        float get_x(void);
+        float get_y(void);
         double get_angle(void);
         void move_up(void);
         void move_down(void);

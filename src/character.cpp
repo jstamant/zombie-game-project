@@ -25,17 +25,9 @@ void Character::set_pos(int new_x, int new_y) {
     sprite.setPosition(x, y);
 }
 
-int Character::get_x(void) {
-    return x;
-}
-
-int Character::get_y(void) {
-    return y;
-}
-
-double Character::get_angle(void) {
-    return angle;
-}
+float  Character::get_x(void)     { return sprite.getPosition().x; }
+float  Character::get_y(void)     { return sprite.getPosition().y; }
+double Character::get_angle(void) { return angle; }
 
 void Character::move_up(void) {
     y -= SPEED;

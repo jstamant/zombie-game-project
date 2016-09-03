@@ -23,6 +23,8 @@ int main()
     //Create some test entities
     Character character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, &window, &mouse);
     Enemy enemy(&entitymanager);
+    Enemy::p_character_ref = &character;
+
 
     while (window.isOpen())
     {
@@ -36,7 +38,7 @@ int main()
             command.pop_back();
         }
 
-        enemy.seek_player(&character);
+        enemy.seek_player();
 
         window.clear(sf::Color(192, 192, 192));
         window.draw(character.get_sprite());

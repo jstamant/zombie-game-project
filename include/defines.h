@@ -7,7 +7,8 @@
 
 #define FRAMELIMIT 60
 
-#define SPEED 3
+#define SPEED   3
+#define Z_SPEED 1
 
 #define PI 3.14159265 //TEMP, THIS SHOULD BE ELSEWHERE??? LIKE IN A LIBRARY?
 
