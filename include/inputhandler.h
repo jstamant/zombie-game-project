@@ -1,5 +1,5 @@
 #ifndef _INPUTHANDLER_H
-#define _INPUTHANDER_H
+#define _INPUTHANDLER_H
 
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
@@ -31,3 +31,4 @@ class InputHandler
 };
 
 #endif
+
