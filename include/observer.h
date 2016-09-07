@@ -1,15 +1,17 @@
 #ifndef _OBSERVER_H
 #define _OBSERVER_H
+//************************************************
+// observer.h
+//************************************************
 
 //Include dependencies
 #include "defines.h"
-#include "drawable.h"
 
 //This class could greatly benefit from templating
 class Observer
 {
     public:
-        virtual void on_notify(Drawable& drawable, Event event) = 0;
+        virtual void on_notify(Event event) = 0;
     private:
 };
 

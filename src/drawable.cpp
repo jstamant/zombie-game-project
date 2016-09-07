@@ -1,4 +1,6 @@
-//drawable.cpp
+//************************************************
+// drawable.cpp
+//************************************************
 
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>

@@ -3,18 +3,18 @@
 
 //Include dependencies
 #include "observer.h"
-#include <vector>
+#include <list>
 
 class Subject
 {
     public:
-        std::vector<Observer*> observers;
         void add_observer(Observer*);
         void remove_observer(Observer*);
-        //int num_observers;
     private:
+        std::list<Observer*> observers;
+        //int num_observers;
     protected:
-        void notify(Drawable&, Event);
+        void notify(Event);
 };
 
 #endif

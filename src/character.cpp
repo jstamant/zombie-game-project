@@ -1,9 +1,18 @@
+//************************************************
+// character.cpp
+//************************************************
+
+//Include SFML dependencies
+#include <SFML/Graphics.hpp>
+
 //Include dependencies
 #include "character.h"
 #include "defines.h"
 #include "drawable.h"
 #include <math.h>
-#include <SFML/Graphics.hpp>
+
+//DEBUG
+#include <iostream>
 
 Character::Character() {
     texture.loadFromFile("character.png");
@@ -11,12 +20,22 @@ Character::Character() {
     sprite.setOrigin(16, 16);
 }
 
-Character::Character(int initial_x, int initial_y,
-                     sf::RenderWindow* reference_window,
-                     sf::Mouse* reference_mouse) : Character::Character() {
+Character::Character(int initial_x, int initial_y): Character::Character() {
     set_pos(initial_x, initial_y);
-    window_access = reference_window;
-    mouse_access = reference_mouse;
+}
+
+void Character::on_notify(Event event) {
+    std::cout << "Character notified...\n"; //DEBUG
+    switch (event) {
+        case SHOOT:
+            //shoot
+            notify(event);
+            break;
+        case MOVE_DOWN:
+            move_down();
+            break;
+    }
+    std::cout << "Done character notified!\n"; //DEBUG
 }
 
 void Character::set_pos(int new_x, int new_y) {
@@ -25,17 +44,9 @@ void Character::set_pos(int new_x, int new_y) {
     sprite.setPosition(x, y);
 }
 
-int Character::get_x(void) {
-    return x;
-}
-
-int Character::get_y(void) {
-    return y;
-}
-
-double Character::get_angle(void) {
-    return angle;
-}
+float  Character::get_x(void)     { return sprite.getPosition().x; }
+float  Character::get_y(void)     { return sprite.getPosition().y; }
+double Character::get_angle(void) { return angle; }
 
 void Character::move_up(void) {
     y -= SPEED;
@@ -59,19 +70,14 @@ void Character::move_right(void) {
 
 //Rotates the character to face the mouse pointer.
 void Character::rotate(void) {
-    sf::Vector2i mouse_vector(mouse_access->getPosition(*window_access));
+    sf::Vector2i mouse_vector(mouse_->getPosition(*window_));
     sf::Vector2i sprite_vector(sprite.getPosition());
     sf::Vector2i angle_vector(mouse_vector - sprite_vector);
     angle = atan2(angle_vector.y, angle_vector.x) * 180 / PI;
     sprite.setRotation(angle);
 }
 
-void Character::shoot(void) {
-    //Generate a muzzle flash
-    //Game logic to hit things
-}
-
-sf::Sprite Character::get_sprite(void) {
+sf::Sprite Character::get_drawable(void) {
     return sprite;
 }
 
