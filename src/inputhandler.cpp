@@ -11,10 +11,8 @@
 //DEBUG
 #include <iostream>
 
-InputHandler::InputHandler(sf::RenderWindow* window, Observer* entitymanager) {
+InputHandler::InputHandler(sf::RenderWindow* window) {
     window_ = window;
-    //entitymanager_ = entitymanager;
-    add_observer(entitymanager);
 
     mouse_movement = &mouse_movement_command;
     key_w = &key_w_command;

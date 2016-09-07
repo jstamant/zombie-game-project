@@ -7,15 +7,23 @@
 
 #include "drawable.h"
 
-Drawable::Drawable() : Drawable::Drawable(0, 0) {
+Entity::Entity() : Entity::Entity(0, 0) {
     //Delegating constructors requires a body
 }
 
-Drawable::Drawable(int x, int y) {
+Entity::Entity(int x, int y) {
     sprite.setPosition(x, y);
 }
 
-sf::Sprite Drawable::get_sprite(void) {
+sf::Sprite Entity::get_sprite(void) {
     return sprite;
+}
+
+void Entity::set_window(sf::RenderWindow* window) {
+    window_ = window;
+}
+
+void Entity::set_mouse(sf::Mouse* mouse) {
+    mouse_ = mouse;
 }
 

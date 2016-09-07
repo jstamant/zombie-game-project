@@ -3,9 +3,10 @@
 
 //Include dependencies
 #include "character.h"
+#include "drawable.h"
 #include "subject.h"
 
-class Enemy: public Drawable, public Subject
+class Enemy: public Entity, public Subject
 {
     public:
         Enemy(Observer*);

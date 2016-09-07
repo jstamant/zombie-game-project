@@ -15,15 +15,16 @@
 class EntityManager : public Observer
 {
     public:
-        EntityManager(sf::RenderWindow&);
+        EntityManager(sf::RenderWindow*, sf::Mouse*);
         void on_notify(Event);
-        //void generate_bullet(void);
         void render(void);
+        void new_entity(Entity*);
     private:
-        sf::RenderWindow* window;
+        sf::RenderWindow* window_;
+        sf::Mouse* mouse_;
         Character character;
         std::list<Bullet> bullet_list;
-        std::list<Drawable*> drawables;
+        std::list<Entity*> entities;
 };
 
 #endif

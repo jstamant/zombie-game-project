@@ -14,17 +14,15 @@
 #include "observer.h"
 #include <vector>
 
-//DEBUG
-#include <iostream>
-
 int main()
 {
     //Define core resources
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_CAPTION);
-    EntityManager entitymanager(window);
-    InputHandler input_handler(&window, &entitymanager);
-    std::vector<Command*> command;
     sf::Mouse mouse;
+
+    EntityManager entitymanager(&window, &mouse);
+    InputHandler input_handler(&window);
+    input_handler.add_observer(&entitymanager);
 
     window.setFramerateLimit(FRAMELIMIT);
 
@@ -32,30 +30,23 @@ int main()
     //Character test_character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, &window, &mouse);
     //test_character.add_observer(&entitymanager);
     //input_handler.add_observer(&test_character);
-    Enemy enemy(&entitymanager);
-    Enemy::p_character_ref = &test_character;
+    //Enemy enemy(&entitymanager);
+    //Enemy::p_character_ref = &test_character;
+    entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
+    //entitymanager.new_entity(new Enemy);
 
     //Run the game
     while (window.isOpen())
     {
         //Process input
         input_handler.handle_input();
-        /*
-        command.clear(); //Wipe the vector to ensure a clean slate
-        command = input_handler.handle_input();
-        //Perform actions determined by input
-        while (!command.empty()) {
-            (command.back())->execute(test_character);
-            command.pop_back();
-        }
-        */
 
-        enemy.seek_player();
+        //Perform game logic
+        //enemy.seek_player();
 
         //Render
         window.clear(sf::Color(192, 192, 192));
-        //window.draw(test_character.get_sprite());
-        window.draw(enemy.get_sprite());
+        //window.draw(enemy.get_sprite());
         entitymanager.render();
 
         window.display();

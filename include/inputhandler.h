@@ -15,7 +15,7 @@
 class InputHandler: public Subject
 {
     public:
-        InputHandler(sf::RenderWindow*, Observer*);
+        InputHandler(sf::RenderWindow*);
         //std::vector<Command*> handle_input(void);
         void handle_input(void);
     private:

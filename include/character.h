@@ -13,7 +13,7 @@
 #include "observer.h"
 #include "subject.h"
 
-class Character: public Drawable, public Observer, public Subject
+class Character: public Entity, public Observer, public Subject
 {
     public:
         Character();

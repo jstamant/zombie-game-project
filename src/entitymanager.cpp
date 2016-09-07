@@ -12,10 +12,9 @@
 //DEBUG
 #include <iostream>
 
-EntityManager::EntityManager(sf::RenderWindow& source_window) {
-    window = &source_window;
-    //Character character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, &window, &mouse);
-    //character.add_observer((Observer*)this?);
+EntityManager::EntityManager(sf::RenderWindow* window, sf::Mouse* mouse) {
+    window_ = window;
+    mouse_  = mouse;
 }
 
 void EntityManager::on_notify(Event event) {
@@ -38,15 +37,25 @@ void EntityManager::on_notify(Event event) {
 }
 
 void EntityManager::render(void) {
-    std::cout << "Rendering: "; //DEBUG
+    std::cout << "Rendering:\n"; //DEBUG
     //Render all characters
+    for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
+        window_->draw((*it)->get_sprite());
+        std::cout << "Character!\n"; //DEBUG
+    }
     //window->draw(character.get_sprite());
     //Render all enemies
     //Render all bullets
     for (std::list<Bullet>::iterator it=bullet_list.begin(); it!=bullet_list.end(); it++) {
-        window->draw(it->get_line());
+        window_->draw(it->get_line());
         std::cout << "OMG BULLET\n"; //DEBUG
     }
     std::cout << "Done!\n"; //DEBUG
+}
+
+void EntityManager::new_entity(Entity* entity) {
+    entity->set_window(window_);
+    entity->set_mouse(mouse_);
+    entities.push_back(entity);
 }
 
