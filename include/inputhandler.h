@@ -6,15 +6,22 @@
 
 //Include dependencies
 #include "command.h"
+#include "defines.h"
+#include "observer.h"
+#include "subject.h"
 #include <vector>
 
-class InputHandler
+//class InputHandler: public Subject, public Observer
+class InputHandler: public Subject
 {
     public:
-        InputHandler(sf::RenderWindow*);
-        std::vector<Command*> handle_input(void);
+        InputHandler(sf::RenderWindow*, Observer*);
+        //std::vector<Command*> handle_input(void);
+        void handle_input(void);
     private:
-        sf::RenderWindow* window;
+        void on_notify(Event);
+        sf::RenderWindow* window_;
+        //Observer* entitymanager_;
         sf::Mouse mouse;
         sf::Event event;
         std::vector<Command*> input_queue;
