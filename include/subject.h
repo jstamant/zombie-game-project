@@ -2,6 +2,7 @@
 #define _SUBJECT_H
 
 //Include dependencies
+#include "entity.h"
 #include "observer.h"
 #include <list>
 

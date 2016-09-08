@@ -9,16 +9,17 @@
 
 //Include dependencies
 #include "defines.h"
-#include "drawable.h"
-#include "observer.h"
-#include "subject.h"
+#include "entity.h"
+//#include "observer.h"
+//#include "subject.h"
 
-class Character: public Entity, public Observer, public Subject
+//class Character: public Entity, public Observer
+class Character: public Entity
 {
     public:
         Character();
         Character(int, int);
-        void on_notify(Event);
+        //virtual void on_notify(Event);
         void set_pos(int, int);
         float get_x(void);
         float get_y(void);
@@ -28,12 +29,13 @@ class Character: public Entity, public Observer, public Subject
         void move_left(void);
         void move_right(void);
         void rotate(void);
+        void shoot(void);
         sf::Sprite get_drawable(void);
+        virtual void update_logic(void);
+        virtual bool is_character(void);
     private:
-        int x, y;
         double angle;
-        sf::RenderWindow* window_;
-        sf::Mouse* mouse_;
 };
 
 #endif
+

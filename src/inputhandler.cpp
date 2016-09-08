@@ -3,6 +3,7 @@
 
 //Include dependencies
 #include "defines.h"
+#include "entity.h"
 #include "inputhandler.h"
 #include "subject.h"
 #include "observer.h"
@@ -14,7 +15,7 @@
 InputHandler::InputHandler(sf::RenderWindow* window) {
     window_ = window;
 
-    mouse_movement = &mouse_movement_command;
+    //mouse_movement = &mouse_movement_command;
     key_w = &key_w_command;
     key_a = &key_a_command;
     key_s = &key_s_command;
@@ -35,9 +36,9 @@ void InputHandler::handle_input(void) {
             if (event.key.code == sf::Keyboard::Escape)
                 window_->close();
         }
-        if (event.type == sf::Event::MouseMoved) {
+        /*if (event.type == sf::Event::MouseMoved) {
             input_queue.push_back(mouse_movement);
-        }
+        }*/
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 //Perform character shooting
@@ -48,13 +49,12 @@ void InputHandler::handle_input(void) {
     }
     //Second, process the movement keys
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        input_queue.push_back(key_w);
+        notify(MOVE_UP);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        input_queue.push_back(key_a);
+        notify(MOVE_LEFT);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        input_queue.push_back(key_s);
+        notify(MOVE_DOWN);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        //input_queue.push_back(key_d);
         notify(MOVE_RIGHT);
 
     //Finally, issue the commands
@@ -68,7 +68,6 @@ void InputHandler::on_notify(Event event) {
     switch (event) {
         case SHOOT:
             ;
-            //do something
             break;
     }
 }

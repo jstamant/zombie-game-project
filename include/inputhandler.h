@@ -7,7 +7,8 @@
 //Include dependencies
 #include "command.h"
 #include "defines.h"
-#include "observer.h"
+#include "entity.h"
+//#include "observer.h"
 #include "subject.h"
 #include <vector>
 
@@ -19,18 +20,18 @@ class InputHandler: public Subject
         //std::vector<Command*> handle_input(void);
         void handle_input(void);
     private:
-        void on_notify(Event);
+        virtual void on_notify(Event);
         sf::RenderWindow* window_;
         //Observer* entitymanager_;
         sf::Mouse mouse;
         sf::Event event;
         std::vector<Command*> input_queue;
-        MouseMovement mouse_movement_command;
+        //MouseMovement mouse_movement_command;
         KeyW key_w_command;
         KeyA key_a_command;
         KeyS key_s_command;
         KeyD key_d_command;
-        Command* mouse_movement;
+        //Command* mouse_movement;
         Command* key_w;
         Command* key_a;
         Command* key_s;

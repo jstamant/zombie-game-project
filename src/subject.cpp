@@ -1,6 +1,6 @@
 //Include dependencies
 #include "defines.h"
-#include "drawable.h"
+#include "entity.h"
 #include "subject.h"
 #include <list>
 
@@ -16,7 +16,6 @@ void Subject::remove_observer(Observer* observer) {
 }
 
 void Subject::notify(Event event) {
-    //(observers.front())->on_notify(event);
     for (std::list<Observer*>::iterator it=observers.begin(); it!=observers.end(); it++) {
         std::cout << "Notify...\n"; //DEBUG
         std::cout << "Event " << event << std::endl; //DEBUG

@@ -6,6 +6,7 @@
 
 //Include dependencies
 #include "defines.h"
+#include "entity.h"
 
 //This class could greatly benefit from templating
 class Observer

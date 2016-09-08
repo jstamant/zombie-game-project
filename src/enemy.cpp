@@ -1,16 +1,16 @@
-//enemy.cpp
+//************************************************
+// enemy.cpp
+//************************************************
 
 //Include dependencies
 #include "character.h"
 #include "enemy.h"
 #include <cmath>
-#include "observer.h"
 
-Enemy::Enemy(Observer* observer) {
+Enemy::Enemy() {
     texture.loadFromFile("enemy.png");
     sprite.setTexture(texture);
     sprite.setOrigin(16, 16);
-    add_observer(observer);
 }
 
 /* void seek_player(void)

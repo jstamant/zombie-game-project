@@ -6,13 +6,10 @@
 #include <SFML/Graphics.hpp>
 
 //Include dependencies
-#include "character.h"
+//#include "character.h"
 #include "defines.h"
-#include "enemy.h"
 #include "entitymanager.h"
 #include "inputhandler.h"
-#include "observer.h"
-#include <vector>
 
 int main()
 {
@@ -27,12 +24,7 @@ int main()
     window.setFramerateLimit(FRAMELIMIT);
 
     //Create some test entities
-    //Character test_character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, &window, &mouse);
-    //test_character.add_observer(&entitymanager);
-    //input_handler.add_observer(&test_character);
-    //Enemy enemy(&entitymanager);
-    //Enemy::p_character_ref = &test_character;
-    entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
+    //entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
     //entitymanager.new_entity(new Enemy);
 
     //Run the game
@@ -43,6 +35,7 @@ int main()
 
         //Perform game logic
         //enemy.seek_player();
+        entitymanager.update_all();
 
         //Render
         window.clear(sf::Color(192, 192, 192));

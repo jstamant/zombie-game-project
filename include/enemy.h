@@ -2,14 +2,13 @@
 #define _ENEMY_H
 
 //Include dependencies
+#include "entity.h"
 #include "character.h"
-#include "drawable.h"
-#include "subject.h"
 
-class Enemy: public Entity, public Subject
+class Enemy: public Entity
 {
     public:
-        Enemy(Observer*);
+        Enemy();
         void seek_player(void);
         static Character* p_character_ref;
 };
