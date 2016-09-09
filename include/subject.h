@@ -1,5 +1,11 @@
 #ifndef _SUBJECT_H
 #define _SUBJECT_H
+//************************************************
+// subject.h
+//************************************************
+
+//Forward declarations
+class Observer;
 
 //Include dependencies
 #include "entity.h"
@@ -13,9 +19,8 @@ class Subject
         void remove_observer(Observer*);
     private:
         std::list<Observer*> observers;
-        //int num_observers;
     protected:
-        void notify(Event);
+        void notify(Event, int=0);
 };
 
 #endif

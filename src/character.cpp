@@ -22,26 +22,12 @@ Character::Character() {
     texture.loadFromFile("character.png"); //Needs optimizing...
     sprite_.setTexture(texture);
     sprite_.setOrigin(16, 16);
+    rect_ = sprite_.getGlobalBounds();
 }
 
 Character::Character(int initial_x, int initial_y): Character::Character() {
     set_pos(initial_x, initial_y);
 }
-
-/*
-void Character::on_notify(Event event) {
-    std::cout << "Character notified...\n"; //DEBUG
-    switch (event) {
-        case SHOOT:
-            notify(event);
-            break;
-        case MOVE_DOWN:
-            move_down();
-            break;
-    }
-    std::cout << "Done character notified!\n"; //DEBUG
-}
-*/
 
 void Character::set_pos(int new_x, int new_y) {
     x_ = new_x;
@@ -73,7 +59,8 @@ void Character::move_right(void) {
     set_pos(x_, y_);
 }
 
-//Rotates the character to face the mouse pointer.
+/* Rotates the character to face the mouse pointer.
+ */
 void Character::rotate(void) {
     sf::Vector2i mouse_vector(mouse_->getPosition(*window_));
     sf::Vector2i sprite_vector(sprite_.getPosition());

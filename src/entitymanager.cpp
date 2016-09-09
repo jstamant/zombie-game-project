@@ -9,6 +9,7 @@
 #include "bullet.h"
 #include "character.h"
 #include "defines.h"
+#include <deque>
 #include "enemy.h"
 #include "entity.h"
 #include "entitymanager.h"
@@ -22,10 +23,11 @@ EntityManager::EntityManager(sf::RenderWindow* window, sf::Mouse* mouse) {
     window_ = window;
     mouse_  = mouse;
     character_ = NULL;
-    id_count = 1;
+    for (int i=1; i<=MAX_ENTITIES; i++)
+        available_ids.push_back(i);
 }
 
-void EntityManager::on_notify(Event event) {
+void EntityManager::on_notify(Event event, int id) {
     switch (event) {
         case SHOOT:
             if (character_)
@@ -47,6 +49,9 @@ void EntityManager::on_notify(Event event) {
             if (character_)
                 character_->move_right();
             break;
+        case NEW_BULLET:
+            //do something;
+            break;
         default:
             break;
     }
@@ -60,10 +65,12 @@ void EntityManager::render(void) {
 }
 
 void EntityManager::new_entity(Entity* entity) {
+    std::cout << "New ID: " << available_ids.front() << std::endl;
     entity->set_window(window_);
     entity->set_mouse(mouse_);
     entity->set_entitymanager(this);
-    entity->set_id(id_count++);
+    entity->set_id(available_ids.front());
+    available_ids.pop_front();
     if (entity->is_enemy())
         Enemy::character_ = character_;
     entities.push_back(entity);
@@ -79,6 +86,7 @@ void EntityManager::new_entity(Entity* entity) {
  */
 void EntityManager::del_entity(int id) {
     purge_list.push(id);
+    available_ids.push_back(id);
 }
 
 /* Remove entities slated for removal.

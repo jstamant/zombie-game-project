@@ -17,25 +17,23 @@ class InputHandler: public Subject
 {
     public:
         InputHandler(sf::RenderWindow*);
-        //std::vector<Command*> handle_input(void);
         void handle_input(void);
     private:
-        virtual void on_notify(Event);
+        //virtual void on_notify(Event, int=0);
         sf::RenderWindow* window_;
-        //Observer* entitymanager_;
         sf::Mouse mouse;
         sf::Event event;
         std::vector<Command*> input_queue;
-        //MouseMovement mouse_movement_command;
+        /*
         KeyW key_w_command;
         KeyA key_a_command;
         KeyS key_s_command;
         KeyD key_d_command;
-        //Command* mouse_movement;
         Command* key_w;
         Command* key_a;
         Command* key_s;
         Command* key_d;
+        */
 };
 
 #endif

@@ -7,12 +7,13 @@
 
 #define FRAMELIMIT 60
 
+#define MAX_ENTITIES 20
+
 #define SPEED   3
 #define Z_SPEED 1
 
 #define PI 3.14159265 //TEMP, THIS SHOULD BE ELSEWHERE??? LIKE IN A LIBRARY?
 
-#define MAX_BULLETS 2
 #define BULLET_FLASH_DURATION 5
 
 #define MAX_OBSERVERS 2
@@ -23,7 +24,8 @@ enum Event
     MOVE_UP,
     MOVE_DOWN,
     MOVE_LEFT,
-    MOVE_RIGHT
+    MOVE_RIGHT,
+    NEW_BULLET
 };
 
 #endif

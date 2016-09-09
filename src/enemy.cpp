@@ -11,6 +11,7 @@ Enemy::Enemy() {
     texture.loadFromFile("enemy.png");
     sprite_.setTexture(texture);
     sprite_.setOrigin(16, 16);
+    rect_ = sprite_.getGlobalBounds();
 }
 
 /* Steps the enemy directly towards the character.

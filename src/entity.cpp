@@ -12,6 +12,7 @@
 Entity::Entity() : Entity::Entity(0, 0) {
     x_ = 0;
     y_ = 0;
+    sf::FloatRect rect_(0, 0, 0, 0);
     mouse_  = NULL;
     window_ = NULL;
     entitymanager_ = NULL;

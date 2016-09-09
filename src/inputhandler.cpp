@@ -19,11 +19,13 @@
 InputHandler::InputHandler(sf::RenderWindow* window) {
     window_ = window;
 
+    /*
     //mouse_movement = &mouse_movement_command;
     key_w = &key_w_command;
     key_a = &key_a_command;
     key_s = &key_s_command;
     key_d = &key_d_command;
+    */
 }
 
 //Processes the different sources of input, appends any valid input into
@@ -65,13 +67,5 @@ void InputHandler::handle_input(void) {
         (input_queue.back())->execute(test_character);
         input_queue.pop_back();
     }*/
-}
-
-void InputHandler::on_notify(Event event) {
-    switch (event) {
-        case SHOOT:
-            ;
-            break;
-    }
 }
 

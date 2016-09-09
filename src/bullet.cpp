@@ -18,6 +18,8 @@ Bullet::Bullet(sf::Vector2f p1, sf::Vector2f p2):
     line[1].position = p2;
     line[0].color = sf::Color::Yellow;
     line[1].color = sf::Color::Yellow;
+    rect_ = line.getBounds();
+    notify(NEW_BULLET, id_);
 }
 
 sf::VertexArray Bullet::get_line(void) { return line; }

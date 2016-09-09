@@ -12,7 +12,7 @@
 class Observer
 {
     public:
-        virtual void on_notify(Event event) = 0;
+        virtual void on_notify(Event event, int id) = 0;
     private:
 };
 

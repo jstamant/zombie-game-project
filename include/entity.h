@@ -10,7 +10,10 @@ class EntityManager;
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
 
-class Entity: public sf::Drawable
+//Include dependencies
+#include "subject.h"
+
+class Entity: public sf::Drawable, public Subject
 {
     public:
         Entity();
@@ -31,6 +34,7 @@ class Entity: public sf::Drawable
         int x_;
         int y_;
         int id_;
+        sf::FloatRect rect_;
         sf::RenderWindow* window_;
         sf::Mouse* mouse_;
         EntityManager* entitymanager_;
