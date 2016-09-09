@@ -58,7 +58,7 @@ $(OBJ_DIR)/%.o: %.cpp
 .PHONY: d
 d: $(DEPS)
 $(OBJ_DIR)/%.d: %.cpp
-#	$(CXX) $(DFLAGS) $< -MT "$*.o $*.d" -MF $*.d -I $(INCLUDE_DIR)
+#	$(CXX) $(DFLAGS) $< -MT "$*.o $*.d" -MF $@ -I$(INCLUDE_DIR)
 	$(CXX) $(DFLAGS) $< -MT $@ -MF $@ -I$(INCLUDE_DIR)
 
 # Include dependencies
@@ -76,5 +76,5 @@ run: $(BINARY)
 # Clean build files only
 .PHONY: clean
 clean:
-	rm $(OBJECTS) $(DEPS)
+	-rm $(OBJECTS) $(DEPS)
 
