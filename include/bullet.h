@@ -20,6 +20,7 @@ class Bullet: public Entity
     private:
         int time_to_live;
         sf::VertexArray line;
+        virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 };
 
 #endif

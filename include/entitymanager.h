@@ -1,5 +1,8 @@
 #ifndef _ENTITYMANAGER_H
 #define _ENTITYMANAGER_H
+//************************************************
+// entitymanager.h
+//************************************************
 
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
@@ -10,7 +13,7 @@
 #include "bullet.h"
 #include <list>
 #include "observer.h"
-#include <vector>
+#include <stack>
 
 class EntityManager: public Observer
 {
@@ -19,9 +22,12 @@ class EntityManager: public Observer
         virtual void on_notify(Event);
         void render(void);
         void new_entity(Entity*);
+        void del_entity(int);
         void update_all(void);
     private:
         int id_count;
+        void purge(void);
+        std::stack<int> purge_list;
         Character* character_;
         sf::RenderWindow* window_;
         sf::Mouse* mouse_;

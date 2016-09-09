@@ -30,7 +30,6 @@ class Character: public Entity
         void move_right(void);
         void rotate(void);
         void shoot(void);
-        sf::Sprite get_drawable(void);
         virtual void update_logic(void);
         virtual bool is_character(void);
     private:

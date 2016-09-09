@@ -9,19 +9,18 @@
 
 Enemy::Enemy() {
     texture.loadFromFile("enemy.png");
-    sprite.setTexture(texture);
-    sprite.setOrigin(16, 16);
+    sprite_.setTexture(texture);
+    sprite_.setOrigin(16, 16);
 }
 
-/* void seek_player(void)
- * Steps the enemy directly towards the character.
+/* Steps the enemy directly towards the character.
  * TODO This could potentially benefit from vector math.
  */
 void Enemy::seek_player(void) {
-    float character_x = p_character_ref->get_x();
-    float character_y = p_character_ref->get_y();
-    float dx = character_x - sprite.getPosition().x;
-    float dy = character_y - sprite.getPosition().y;
+    float character_x = character_->get_x();
+    float character_y = character_->get_y();
+    float dx = character_x - sprite_.getPosition().x;
+    float dy = character_y - sprite_.getPosition().y;
     float distance = sqrt(pow(dx,2) + pow(dy,2));
     float ratio = Z_SPEED/distance;
 
@@ -30,8 +29,14 @@ void Enemy::seek_player(void) {
     float move_y = ratio*dy;
 
     //Perform movement
-    sprite.move(move_x, move_y);
+    sprite_.move(move_x, move_y);
 }
 
-Character* Enemy::p_character_ref = NULL; //Character reference is added later
+void Enemy::update_logic(void) {
+    seek_player();
+}
+
+bool Enemy::is_enemy(void) { return true; }
+
+Character* Enemy::character_ = NULL; //Character reference is added later
 

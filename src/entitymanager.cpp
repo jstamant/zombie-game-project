@@ -1,3 +1,7 @@
+//************************************************
+// entitymanager.cpp
+//************************************************
+
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
 
@@ -5,10 +9,11 @@
 #include "bullet.h"
 #include "character.h"
 #include "defines.h"
+#include "enemy.h"
 #include "entity.h"
 #include "entitymanager.h"
 #include <list>
-#include <vector>
+#include <stack>
 
 //DEBUG
 #include <iostream>
@@ -21,13 +26,10 @@ EntityManager::EntityManager(sf::RenderWindow* window, sf::Mouse* mouse) {
 }
 
 void EntityManager::on_notify(Event event) {
-    std::cout << "EntityManager notified...\n"; //DEBUG
     switch (event) {
         case SHOOT:
-            std::cout << "New bullet!\n"; //DEBUG
             if (character_)
                 character_->shoot();
-            std::cout << "Done!\n"; //DEBUG
             break;
         case MOVE_UP:
             if (character_)
@@ -48,26 +50,13 @@ void EntityManager::on_notify(Event event) {
         default:
             break;
     }
-    std::cout << "EntityManager notify done!\n"; //DEBUG
 }
 
 void EntityManager::render(void) {
-    std::cout << "Rendering:\n"; //DEBUG
     //Render all entities
     for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
-        window_->draw((*it)->get_sprite());
-        std::cout << "Character!\n"; //DEBUG
+        window_->draw(**it);
     }
-    //window->draw(character.get_sprite());
-    //Render all enemies
-    //Render all bullets
-    /*
-    for (std::list<Bullet>::iterator it=bullet_list.begin(); it!=bullet_list.end(); it++) {
-        window_->draw(it->get_line());
-        std::cout << "OMG BULLET\n"; //DEBUG
-    }
-    std::cout << "Done!\n"; //DEBUG
-    */
 }
 
 void EntityManager::new_entity(Entity* entity) {
@@ -75,15 +64,45 @@ void EntityManager::new_entity(Entity* entity) {
     entity->set_mouse(mouse_);
     entity->set_entitymanager(this);
     entity->set_id(id_count++);
+    if (entity->is_enemy())
+        Enemy::character_ = character_;
     entities.push_back(entity);
     if (entity->is_character())
         character_ = dynamic_cast<Character*>(entity);
+}
+
+/* Add an entity to the purge list for later removal.
+ * Entities can't be deleted during the update() loop, because the iterator in
+ * the update() loop will no longer point to the next entity. Undefined
+ * behaviour follows.
+ * @param id: ID of the entity for removal
+ */
+void EntityManager::del_entity(int id) {
+    purge_list.push(id);
+}
+
+/* Remove entities slated for removal.
+ */
+void EntityManager::purge(void) {
+    int delete_id = 0;
+    while (!purge_list.empty()) {
+        delete_id = purge_list.top();
+        purge_list.pop();
+        for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
+            if ( (*it)->get_id() == delete_id ){
+                delete *it;
+                entities.erase(it);
+                break;
+            }
+        }
+    }
 }
 
 /* void EntityManager::update_all(void)
  * Updates the logic of all its tracked entities.
  */
 void EntityManager::update_all(void) {
+    purge();
     for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
         (*it)->update_logic();
     }

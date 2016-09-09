@@ -7,3 +7,4 @@ Temp description.
 * Implement entity IDs
 * Make entity IDs const
 * RICOCHET-ING BULLETS, MOFO!!!!!
+* makefile does not recompile files when defines.h changes

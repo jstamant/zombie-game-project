@@ -10,17 +10,18 @@
 #include "character.h"
 #include "defines.h"
 #include "entity.h"
+#include "entitymanager.h"
 #include <math.h>
 //#include "observer.h"
 //#include "subject.h"
 
 //DEBUG
-#include <iostream>
+//#include <iostream>
 
 Character::Character() {
     texture.loadFromFile("character.png"); //Needs optimizing...
-    sprite.setTexture(texture);
-    sprite.setOrigin(16, 16);
+    sprite_.setTexture(texture);
+    sprite_.setOrigin(16, 16);
 }
 
 Character::Character(int initial_x, int initial_y): Character::Character() {
@@ -45,11 +46,11 @@ void Character::on_notify(Event event) {
 void Character::set_pos(int new_x, int new_y) {
     x_ = new_x;
     y_ = new_y;
-    sprite.setPosition(x_, y_);
+    sprite_.setPosition(x_, y_);
 }
 
-float  Character::get_x(void)     { return sprite.getPosition().x; }
-float  Character::get_y(void)     { return sprite.getPosition().y; }
+float  Character::get_x(void)     { return sprite_.getPosition().x; }
+float  Character::get_y(void)     { return sprite_.getPosition().y; }
 double Character::get_angle(void) { return angle; }
 
 void Character::move_up(void) {
@@ -75,25 +76,20 @@ void Character::move_right(void) {
 //Rotates the character to face the mouse pointer.
 void Character::rotate(void) {
     sf::Vector2i mouse_vector(mouse_->getPosition(*window_));
-    sf::Vector2i sprite_vector(sprite.getPosition());
+    sf::Vector2i sprite_vector(sprite_.getPosition());
     sf::Vector2i angle_vector(mouse_vector - sprite_vector);
     angle = atan2(angle_vector.y, angle_vector.x) * 180 / PI;
-    sprite.setRotation(angle);
+    sprite_.setRotation(angle);
 }
 
 void Character::shoot(void) {
     sf::Vector2f mouse_position(mouse_->getPosition(*window_));
-    Bullet* bullet = new Bullet(sprite.getPosition(), mouse_position);
-    notify(NEW, dynamic_cast<Entity*>(bullet));
-}
-
-sf::Sprite Character::get_drawable(void) {
-    return sprite;
+    Bullet* bullet = new Bullet(sprite_.getPosition(), mouse_position);
+    entitymanager_->new_entity(bullet);
 }
 
 void Character::update_logic(void) {
     if (mouse_ && window_) {
-        std::cout << "Rotate!\n";
         rotate();
     }
 }

@@ -6,8 +6,9 @@
 #include <SFML/Graphics.hpp>
 
 //Include dependencies
-//#include "character.h"
+#include "character.h"
 #include "defines.h"
+#include "enemy.h"
 #include "entitymanager.h"
 #include "inputhandler.h"
 
@@ -24,8 +25,8 @@ int main()
     window.setFramerateLimit(FRAMELIMIT);
 
     //Create some test entities
-    //entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
-    //entitymanager.new_entity(new Enemy);
+    entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
+    entitymanager.new_entity(new Enemy);
 
     //Run the game
     while (window.isOpen())
@@ -34,7 +35,6 @@ int main()
         input_handler.handle_input();
 
         //Perform game logic
-        //enemy.seek_player();
         entitymanager.update_all();
 
         //Render

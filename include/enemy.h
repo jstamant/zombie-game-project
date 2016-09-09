@@ -9,8 +9,11 @@ class Enemy: public Entity
 {
     public:
         Enemy();
+        static Character* character_;
+        virtual void update_logic(void);
+        virtual bool is_enemy(void);
+    private:
         void seek_player(void);
-        static Character* p_character_ref;
 };
 
 #endif

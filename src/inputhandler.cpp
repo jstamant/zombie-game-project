@@ -1,3 +1,7 @@
+//************************************************
+// inputhandler.cpp
+//************************************************
+
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
 
@@ -42,7 +46,6 @@ void InputHandler::handle_input(void) {
         if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 //Perform character shooting
-                std::cout << "Pow!\n"; //DEBUG
                 notify(SHOOT);
             }
         }

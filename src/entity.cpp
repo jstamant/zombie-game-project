@@ -7,7 +7,7 @@
 
 //Include dependencies
 #include "entity.h"
-#include "entitymanager.h"
+//#include "entitymanager.h"
 
 Entity::Entity() : Entity::Entity(0, 0) {
     x_ = 0;
@@ -18,11 +18,11 @@ Entity::Entity() : Entity::Entity(0, 0) {
 }
 
 Entity::Entity(int x, int y) {
-    sprite.setPosition(x, y);
+    sprite_.setPosition(x, y);
 }
 
 sf::Sprite Entity::get_sprite(void) {
-    return sprite;
+    return sprite_;
 }
 
 void Entity::set_window(sf::RenderWindow* window) {
@@ -46,4 +46,12 @@ int Entity::get_id(void) {
 }
 
 bool Entity::is_character(void) { return false; }
+bool Entity::is_enemy(void)     { return false; }
+
+/* Provide a default draw function for all entities that can be overriden by
+ * derived classes. By default, render the entity's sprite.
+ */
+void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    target.draw(sprite_, states);
+}
 
