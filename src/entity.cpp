@@ -38,13 +38,11 @@ void Entity::set_entitymanager(EntityManager* entitymanager) {
     entitymanager_ = entitymanager;
 }
 
-void Entity::set_id(int id) {
-    id_ = id;
-}
+void Entity::set_id(int id) { id_ = id; }
 
-int Entity::get_id(void) {
-    return id_;
-}
+int Entity::get_id(void) { return id_; }
+
+sf::FloatRect Entity::get_rect(void) { return rect_; }
 
 bool Entity::is_character(void) { return false; }
 bool Entity::is_enemy(void)     { return false; }

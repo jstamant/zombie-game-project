@@ -25,6 +25,7 @@ class EntityManager: public Observer
         void new_entity(Entity*);
         void del_entity(int);
         void update_all(void);
+        std::list<Entity*> check_collisions(sf::FloatRect);
     private:
         void purge(void);
         std::stack<int> purge_list;

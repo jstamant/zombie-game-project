@@ -134,3 +134,15 @@ void EntityManager::bind_character(void) {
 }
 */
 
+/* Check collisions of a rect with all entities.
+ * @param rect: Rectangle to check collisions with all entities
+ * @return list: List of all entities that collide with the input rect
+ */
+std::list<Entity*> EntityManager::check_collisions(sf::FloatRect rect) {
+    std::list<Entity*> collision_list;
+    for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
+        if ((*it)->get_rect().intersects(rect))
+            collision_list.push_back(*it);
+    }
+}
+

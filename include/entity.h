@@ -24,6 +24,7 @@ class Entity: public sf::Drawable, public Subject
         void set_entitymanager(EntityManager*);
         void set_id(int);
         int  get_id(void);
+        sf::FloatRect get_rect(void);
         virtual bool is_character(void);
         virtual bool is_enemy(void);
         virtual void update_logic(void) = 0;

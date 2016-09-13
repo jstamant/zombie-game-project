@@ -69,6 +69,8 @@ void Character::rotate(void) {
     sprite_.setRotation(angle);
 }
 
+/* Generates a bullet, and passes it to the entity manager for tracking.
+ */
 void Character::shoot(void) {
     sf::Vector2f mouse_position(mouse_->getPosition(*window_));
     Bullet* bullet = new Bullet(sprite_.getPosition(), mouse_position);
