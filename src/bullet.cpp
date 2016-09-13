@@ -31,6 +31,7 @@ sf::VertexArray Bullet::get_line(void) { return line; }
 void Bullet::update_logic(void) {
     if (!checked_collisions) {
         find_potential_collisions();
+        //find_first_collision();
     }
     if (--time_to_live == 0) {
         entitymanager_->del_entity(id_);

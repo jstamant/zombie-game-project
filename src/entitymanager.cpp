@@ -144,5 +144,6 @@ std::list<Entity*> EntityManager::check_collisions(sf::FloatRect rect) {
         if ((*it)->get_rect().intersects(rect))
             collision_list.push_back(*it);
     }
+    return collision_list;
 }
 
