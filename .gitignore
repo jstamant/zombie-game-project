@@ -13,3 +13,6 @@
 
 # Editor lock files
 *.swp
+
+# Project files
+*.cbp
