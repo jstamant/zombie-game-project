@@ -27,6 +27,7 @@ class Bullet: public Entity
         void find_potential_collisions(void);
         void find_first_collision(void);
         std::list<Entity*> collision_list;
+        void extend_line(void);
 };
 
 #endif

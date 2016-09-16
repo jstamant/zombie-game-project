@@ -39,7 +39,6 @@ int main()
 
         //Render
         window.clear(sf::Color(192, 192, 192));
-        //window.draw(enemy.get_sprite());
         entitymanager.render();
 
         window.display();

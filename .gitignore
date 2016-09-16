@@ -14,5 +14,6 @@
 # Editor lock files
 *.swp
 
-# Project files
-*.cbp
+# CodeBlocks IDE files
+*.layout
+*.depend
