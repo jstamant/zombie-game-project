@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="project" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="sfml-app" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=gnu++11" />
+			<Add option="-fexceptions" />
+			<Add directory="C:/SFML-2.4.0/include" />
+			<Add directory="include" />
+		</Compiler>
+		<Linker>
+			<Add library="sfml-graphics" />
+			<Add library="sfml-window" />
+			<Add library="sfml-system" />
+			<Add directory="C:/SFML-2.4.0/lib" />
+		</Linker>
+		<Unit filename="include/bullet.h" />
+		<Unit filename="include/character.h" />
+		<Unit filename="include/command.h" />
+		<Unit filename="include/defines.h" />
+		<Unit filename="include/enemy.h" />
+		<Unit filename="include/entity.h" />
+		<Unit filename="include/entitymanager.h" />
+		<Unit filename="include/inputhandler.h" />
+		<Unit filename="include/observer.h" />
+		<Unit filename="include/subject.h" />
+		<Unit filename="src/bullet.cpp" />
+		<Unit filename="src/character.cpp" />
+		<Unit filename="src/enemy.cpp" />
+		<Unit filename="src/entity.cpp" />
+		<Unit filename="src/entitymanager.cpp" />
+		<Unit filename="src/inputhandler.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/observer.cpp" />
+		<Unit filename="src/subject.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
