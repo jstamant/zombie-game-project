@@ -25,7 +25,9 @@ class Entity: public sf::Drawable, public Subject
         void set_id(int);
         int  get_id(void);
         sf::FloatRect get_rect(void);
+        virtual bool is_bullet(void);
         virtual bool is_character(void);
+        virtual bool is_collidable(void);
         virtual bool is_enemy(void);
         virtual void update_logic(void) = 0;
         virtual void draw(sf::RenderTarget&, sf::RenderStates) const;

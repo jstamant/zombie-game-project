@@ -18,6 +18,7 @@ class Bullet: public Entity
         //~Bullet();
         sf::VertexArray get_line(void);
         virtual void update_logic(void);
+        virtual bool is_bullet(void);
     private:
         int time_to_live;
         float slope_;

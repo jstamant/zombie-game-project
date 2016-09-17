@@ -44,8 +44,10 @@ int Entity::get_id(void) { return id_; }
 
 sf::FloatRect Entity::get_rect(void) { return rect_; }
 
-bool Entity::is_character(void) { return false; }
-bool Entity::is_enemy(void)     { return false; }
+bool Entity::is_bullet(void)     { return false; }
+bool Entity::is_character(void)  { return false; }
+bool Entity::is_collidable(void) { return false; }
+bool Entity::is_enemy(void)      { return false; }
 
 /* Provide a default draw function for all entities that can be overriden by
  * derived classes. By default, render the entity's sprite.

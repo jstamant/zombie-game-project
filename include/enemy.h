@@ -11,6 +11,7 @@ class Enemy: public Entity
         Enemy();
         static Character* character_;
         virtual void update_logic(void);
+        virtual bool is_collidable(void);
         virtual bool is_enemy(void);
     private:
         void seek_player(void);

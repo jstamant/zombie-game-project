@@ -27,6 +27,7 @@ int main()
     //Create some test entities
     entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
     entitymanager.new_entity(new Enemy);
+    long unsigned int enemy_spawn = 0;
 
     //Run the game
     while (window.isOpen())
@@ -36,6 +37,11 @@ int main()
 
         //Perform game logic
         entitymanager.update_all();
+        //DEBUG
+        if (enemy_spawn++ >= 100) {
+            entitymanager.new_entity(new Enemy);
+            enemy_spawn = 0;
+        }
 
         //Render
         window.clear(sf::Color(192, 192, 192));

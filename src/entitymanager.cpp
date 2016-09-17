@@ -8,6 +8,7 @@
 //Include dependencies
 #include "bullet.h"
 #include "character.h"
+#include <cmath>
 #include "defines.h"
 #include <deque>
 #include "enemy.h"
@@ -23,6 +24,7 @@ EntityManager::EntityManager(sf::RenderWindow* window, sf::Mouse* mouse) {
     window_ = window;
     mouse_  = mouse;
     character_ = NULL;
+    m_collision_point = sf::Vector2f(0, 0);
     for (int i=1; i<=MAX_ENTITIES; i++)
         available_ids.push_back(i);
 }
@@ -57,15 +59,16 @@ void EntityManager::on_notify(Event event, int id) {
     }
 }
 
+/* Renders all drawable entities to the window.
+ */
 void EntityManager::render(void) {
-    //Render all entities
     for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
         window_->draw(**it);
     }
 }
 
 void EntityManager::new_entity(Entity* entity) {
-    std::cout << "New ID: " << available_ids.front() << std::endl;
+    std::cout << "New ID: " << available_ids.front() << std::endl; //DEBUG
     entity->set_window(window_);
     entity->set_mouse(mouse_);
     entity->set_entitymanager(this);
@@ -73,9 +76,11 @@ void EntityManager::new_entity(Entity* entity) {
     available_ids.pop_front();
     if (entity->is_enemy())
         Enemy::character_ = character_;
-    entities.push_back(entity);
+    if (entity->is_collidable())
+        collidables.push_back(entity);
     if (entity->is_character())
         character_ = dynamic_cast<Character*>(entity);
+    entities.push_back(entity);
 }
 
 /* Add an entity to the purge list for later removal.
@@ -90,6 +95,8 @@ void EntityManager::del_entity(int id) {
 }
 
 /* Remove entities slated for removal.
+ * TODO fix how this function is inefficiently searching through the collidables
+ * list, even if the entity is not a collidable
  */
 void EntityManager::purge(void) {
     int delete_id = 0;
@@ -99,6 +106,12 @@ void EntityManager::purge(void) {
         for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
             if ( (*it)->get_id() == delete_id ){
                 delete *it;
+                entities.erase(it);
+                break;
+            }
+        }
+        for (std::list<Entity*>::iterator it=collidables.begin(); it!=collidables.end(); it++) {
+            if ( (*it)->get_id() == delete_id ){
                 entities.erase(it);
                 break;
             }
@@ -116,34 +129,58 @@ void EntityManager::update_all(void) {
     }
 }
 
-/* Searches its list of entities for a character entity, and sets its
- * character_ reference to it.
- */
-/*
-void EntityManager::bind_character(void) {
-    //int id = 0;
-    for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
-        if (((*it)->is_character())) {
-            std::cout << "Character found!\n"; //DEBUG
-            character_ = dynamic_cast<Character*>(*it);
-            //id = (*it)->get_id();
-            //std::cout << "ID: " << id << std::endl; //DEBUG
-        }
-    }
-    //character_ = entities;
-}
-*/
-
-/* Check collisions of a rect with all entities.
- * @param rect: Rectangle to check collisions with all entities
+/* Check collisions of a rect with all collidables.
+ * @param rect: Rectangle to check collisions with all collidables
  * @return list: List of all entities that collide with the input rect
  */
 std::list<Entity*> EntityManager::check_collisions(sf::FloatRect rect) {
     std::list<Entity*> collision_list;
-    for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
+    for (std::list<Entity*>::iterator it=collidables.begin(); it!=collidables.end(); it++) {
         if ((*it)->get_rect().intersects(rect))
             collision_list.push_back(*it);
     }
     return collision_list;
+}
+
+/* Find all collision with a line. Collisions will be listed in order from
+ * source to destination.
+ * @param Point from where to start the collision detection.
+ * @param Point where the collision detection finishes.
+ * @return A list of entities whose rects collide with the line.
+ * TODO the returned list is bloated with re-occurences of collisions. This is
+ * from generating a collision for every pixel of collision.
+ */
+std::list<Entity*> EntityManager::collision_line(sf::Vector2f source, sf::Vector2f dest) {
+    std::list<Entity*> collision_list;
+    float dx = dest.x - source.x;
+    float dy = dest.y - source.y;
+    float distance = sqrt(pow(dx,2)+pow(dy,2));
+    float step_x = dx/distance;
+    float step_y = dy/distance;
+    float check_x = source.x;
+    float check_y = source.y;
+    //For every point along line:
+    for (int i=0; i<distance; i++) {
+        //Check collisions at (check_x, check_y)
+        for (std::list<Entity*>::iterator it=collidables.begin(); it!=collidables.end(); it++) {
+            if ((*it)->get_rect().contains(check_x, check_y)) {
+                collision_list.push_back(*it);
+                if (m_collision_point == sf::Vector2f(0, 0))
+                    m_collision_point = sf::Vector2f(check_x, check_y);
+            }
+        }
+        //Check next point in the line
+        check_x += step_x;
+        check_y += step_y;
+    }
+    return collision_list;
+}
+
+/* Returns, and resets the last collision_point.
+ */
+sf::Vector2f EntityManager::pop_collision_point(void) {
+    sf::Vector2f collision_point = m_collision_point;
+    m_collision_point = sf::Vector2f(0, 0);
+    return collision_point;
 }
 

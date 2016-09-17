@@ -31,13 +31,15 @@ void Enemy::seek_player(void) {
 
     //Perform movement
     sprite_.move(move_x, move_y);
+    rect_ = sprite_.getGlobalBounds();
 }
 
 void Enemy::update_logic(void) {
     seek_player();
 }
 
-bool Enemy::is_enemy(void) { return true; }
+bool Enemy::is_collidable(void) { return true; }
+bool Enemy::is_enemy(void)      { return true; }
 
 Character* Enemy::character_ = NULL; //Character reference is added later
 
