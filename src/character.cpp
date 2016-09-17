@@ -16,23 +16,18 @@
 //#include "subject.h"
 
 //DEBUG
-//#include <iostream>
+#include <iostream>
 
 Character::Character() {
     texture.loadFromFile("character.png"); //Needs optimizing...
     sprite_.setTexture(texture);
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
+    m_ammo = 20;
 }
 
-Character::Character(int initial_x, int initial_y): Character::Character() {
-    set_pos(initial_x, initial_y);
-}
-
-void Character::set_pos(int new_x, int new_y) {
-    x_ = new_x;
-    y_ = new_y;
-    sprite_.setPosition(x_, y_);
+Character::Character(int x, int y): Character::Character() {
+    set_position(x, y);
 }
 
 float  Character::get_x(void)     { return sprite_.getPosition().x; }
@@ -41,22 +36,22 @@ double Character::get_angle(void) { return angle; }
 
 void Character::move_up(void) {
     y_ -= SPEED;
-    set_pos(x_, y_);
+    set_position(x_, y_);
 }
 
 void Character::move_down(void) {
     y_ += SPEED;
-    set_pos(x_, y_);
+    set_position(x_, y_);
 }
 
 void Character::move_left(void) {
     x_ -= SPEED;
-    set_pos(x_, y_);
+    set_position(x_, y_);
 }
 
 void Character::move_right(void) {
     x_ += SPEED;
-    set_pos(x_, y_);
+    set_position(x_, y_);
 }
 
 /* Rotates the character to face the mouse pointer.
@@ -72,16 +67,30 @@ void Character::rotate(void) {
 /* Generates a bullet, and passes it to the entity manager for tracking.
  */
 void Character::shoot(void) {
-    sf::Vector2f mouse_position(mouse_->getPosition(*window_));
-    Bullet* bullet = new Bullet(sprite_.getPosition(), mouse_position);
-    entitymanager_->new_entity(bullet);
+    if (m_ammo > 0)
+    {
+        sf::Vector2f mouse_position(mouse_->getPosition(*window_));
+        Bullet* bullet = new Bullet(sprite_.getPosition(), mouse_position);
+        entitymanager_->new_entity(bullet);
+        m_ammo--;
+    }
 }
 
-void Character::update_logic(void) {
+void Character::update_logic(void)
+{
     if (mouse_ && window_) {
         rotate();
+    }
+    m_collision_list = entitymanager_->check_collisions_pickups(rect_);
+    if ( !m_collision_list.empty() ) {
+        for (std::list<Entity*>::iterator it=m_collision_list.begin(); it!=m_collision_list.end(); it++) {
+            m_ammo += 10;
+            entitymanager_->del_entity((*it)->get_id());
+        }
+        m_collision_list.clear();
     }
 }
 
 bool Character::is_character(void) { return true; }
 
+int Character::get_ammo(void) { return m_ammo; }

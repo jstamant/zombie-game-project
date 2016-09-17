@@ -10,17 +10,13 @@
 //Include dependencies
 #include "defines.h"
 #include "entity.h"
-//#include "observer.h"
-//#include "subject.h"
+#include <list>
 
-//class Character: public Entity, public Observer
 class Character: public Entity
 {
     public:
         Character();
         Character(int, int);
-        //virtual void on_notify(Event);
-        void set_pos(int, int);
         float get_x(void);
         float get_y(void);
         double get_angle(void);
@@ -32,8 +28,11 @@ class Character: public Entity
         void shoot(void);
         virtual void update_logic(void);
         virtual bool is_character(void);
+        int get_ammo(void);
     private:
         double angle;
+        int m_ammo;
+        std::list<Entity*> m_collision_list;
 };
 
 #endif

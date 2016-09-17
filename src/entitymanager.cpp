@@ -17,6 +17,9 @@
 #include <list>
 #include <stack>
 
+//TODO remove this when the dependency for this global is phased-out
+extern Character* g_character;
+
 //DEBUG
 #include <iostream>
 
@@ -74,12 +77,15 @@ void EntityManager::new_entity(Entity* entity) {
     entity->set_entitymanager(this);
     entity->set_id(available_ids.front());
     available_ids.pop_front();
-    if (entity->is_enemy())
-        Enemy::character_ = character_;
     if (entity->is_collidable())
         collidables.push_back(entity);
+    if (entity->is_pickup())
+        pickups.push_back(entity);
     if (entity->is_character())
+    {
         character_ = dynamic_cast<Character*>(entity);
+        g_character = dynamic_cast<Character*>(entity);
+    }
     entities.push_back(entity);
 }
 
@@ -104,15 +110,21 @@ void EntityManager::purge(void) {
         delete_id = purge_list.top();
         purge_list.pop();
         for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
-            if ( (*it)->get_id() == delete_id ){
+            if ( (*it)->get_id() == delete_id ) {
                 delete *it;
                 entities.erase(it);
                 break;
             }
         }
         for (std::list<Entity*>::iterator it=collidables.begin(); it!=collidables.end(); it++) {
-            if ( (*it)->get_id() == delete_id ){
-                entities.erase(it);
+            if ( (*it)->get_id() == delete_id ) {
+                collidables.erase(it);
+                break;
+            }
+        }
+        for (std::list<Entity*>::iterator it=pickups.begin(); it!=pickups.end(); it++) {
+            if ( (*it)->get_id() == delete_id ) {
+                pickups.erase(it);
                 break;
             }
         }
@@ -140,6 +152,20 @@ std::list<Entity*> EntityManager::check_collisions(sf::FloatRect rect) {
             collision_list.push_back(*it);
     }
     return collision_list;
+}
+
+/* Checks collisions of a rect with all pickups.
+ * @param Rectable to check collisions with pickups
+ * @return List of all pickups that collide with the input rect
+ */
+std::list<Entity*> EntityManager::check_collisions_pickups(sf::FloatRect rect)
+{
+    std::list<Entity*> pickup_list;
+    for (std::list<Entity*>::iterator it=pickups.begin(); it!=pickups.end(); it++) {
+        if ((*it)->get_rect().intersects(rect))
+            pickup_list.push_back(*it);
+    }
+    return pickup_list;
 }
 
 /* Find all collision with a line. Collisions will be listed in order from

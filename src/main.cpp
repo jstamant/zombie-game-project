@@ -11,6 +11,11 @@
 #include "enemy.h"
 #include "entitymanager.h"
 #include "inputhandler.h"
+#include "pickup.h"
+#include "userinterface.h"
+
+//Make this character reference global for now... :/
+Character* g_character = NULL;
 
 int main()
 {
@@ -27,7 +32,10 @@ int main()
     //Create some test entities
     entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
     entitymanager.new_entity(new Enemy);
+    entitymanager.new_entity(new UserInterface);
+    entitymanager.new_entity(new Pickup(100, 100));
     long unsigned int enemy_spawn = 0;
+    long unsigned int pickup_spawn = 0;
 
     //Run the game
     while (window.isOpen())
@@ -41,6 +49,10 @@ int main()
         if (enemy_spawn++ >= 100) {
             entitymanager.new_entity(new Enemy);
             enemy_spawn = 0;
+        }
+        if (pickup_spawn++ >= 700) {
+            entitymanager.new_entity(new Pickup(300,300));
+            pickup_spawn = 0;
         }
 
         //Render

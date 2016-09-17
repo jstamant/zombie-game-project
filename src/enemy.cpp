@@ -4,8 +4,11 @@
 
 //Include dependencies
 #include "character.h"
-#include "enemy.h"
 #include <cmath>
+#include "enemy.h"
+
+//TODO remove this once the global is phased out
+extern Character* g_character;
 
 Enemy::Enemy() {
     texture.loadFromFile("enemy.png");
@@ -18,10 +21,10 @@ Enemy::Enemy() {
  * TODO This could potentially benefit from vector math.
  */
 void Enemy::seek_player(void) {
-    float character_x = character_->get_x();
-    float character_y = character_->get_y();
-    float dx = character_x - sprite_.getPosition().x;
-    float dy = character_y - sprite_.getPosition().y;
+    float character_x = g_character->get_x();
+    float character_y = g_character->get_y();
+    float dx = character_x - x_;
+    float dy = character_y - y_;
     float distance = sqrt(pow(dx,2) + pow(dy,2));
     float ratio = Z_SPEED/distance;
 
@@ -30,7 +33,7 @@ void Enemy::seek_player(void) {
     float move_y = ratio*dy;
 
     //Perform movement
-    sprite_.move(move_x, move_y);
+    move(move_x, move_y);
     rect_ = sprite_.getGlobalBounds();
 }
 
@@ -40,6 +43,4 @@ void Enemy::update_logic(void) {
 
 bool Enemy::is_collidable(void) { return true; }
 bool Enemy::is_enemy(void)      { return true; }
-
-Character* Enemy::character_ = NULL; //Character reference is added later
 
