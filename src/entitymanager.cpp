@@ -175,6 +175,8 @@ std::list<Entity*> EntityManager::check_collisions_pickups(sf::FloatRect rect)
  * @return A list of entities whose rects collide with the line.
  * TODO the returned list is bloated with re-occurences of collisions. This is
  * from generating a collision for every pixel of collision.
+ * TODO this checks if the entity is a character, so it's tailored for bullet
+ * collision; which may or may not be out of the scope of this function...
  */
 std::list<Entity*> EntityManager::collision_line(sf::Vector2f source, sf::Vector2f dest) {
     std::list<Entity*> collision_list;
@@ -190,9 +192,11 @@ std::list<Entity*> EntityManager::collision_line(sf::Vector2f source, sf::Vector
         //Check collisions at (check_x, check_y)
         for (std::list<Entity*>::iterator it=collidables.begin(); it!=collidables.end(); it++) {
             if ((*it)->get_rect().contains(check_x, check_y)) {
-                collision_list.push_back(*it);
-                if (m_collision_point == sf::Vector2f(0, 0))
-                    m_collision_point = sf::Vector2f(check_x, check_y);
+                if ( !(*it)->is_character() ) {
+                    collision_list.push_back(*it);
+                    if (m_collision_point == sf::Vector2f(0, 0))
+                        m_collision_point = sf::Vector2f(check_x, check_y);
+                }
             }
         }
         //Check next point in the line

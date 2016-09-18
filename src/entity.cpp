@@ -11,6 +11,7 @@
 Entity::Entity() : Entity::Entity(0, 0) {
     x_ = 0;
     y_ = 0;
+    m_health = 1;
     sf::FloatRect rect_(0, 0, 0, 0);
     mouse_  = NULL;
     window_ = NULL;
@@ -51,6 +52,7 @@ void Entity::set_entitymanager(EntityManager* entitymanager) {
 void Entity::set_id(int id) { id_ = id; }
 
 int Entity::get_id(void) { return id_; }
+int Entity::get_health(void) { return m_health; }
 
 sf::FloatRect Entity::get_rect(void) { return rect_; }
 
@@ -65,5 +67,13 @@ bool Entity::is_pickup(void)     { return false; }
  */
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(sprite_, states);
+}
+
+void Entity::take_damage(int damage) {
+    m_health -= damage;
+}
+
+sf::Vector2f Entity::get_position(void) {
+    return sf::Vector2f(x_, y_);
 }
 

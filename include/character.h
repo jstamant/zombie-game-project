@@ -28,6 +28,7 @@ class Character: public Entity
         void shoot(void);
         virtual void update_logic(void);
         virtual bool is_character(void);
+        virtual bool is_collidable(void);
         int get_ammo(void);
     private:
         double angle;

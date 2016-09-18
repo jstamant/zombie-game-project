@@ -24,6 +24,7 @@ Character::Character() {
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
     m_ammo = 20;
+    m_health = 100;
 }
 
 Character::Character(int x, int y): Character::Character() {
@@ -81,6 +82,9 @@ void Character::update_logic(void)
     if (mouse_ && window_) {
         rotate();
     }
+    if (m_health <= 0) {
+        entitymanager_->del_entity(id_);
+    }
     m_collision_list = entitymanager_->check_collisions_pickups(rect_);
     if ( !m_collision_list.empty() ) {
         for (std::list<Entity*>::iterator it=m_collision_list.begin(); it!=m_collision_list.end(); it++) {
@@ -92,5 +96,6 @@ void Character::update_logic(void)
 }
 
 bool Character::is_character(void) { return true; }
+bool Character::is_collidable(void) { return true; }
 
 int Character::get_ammo(void) { return m_ammo; }

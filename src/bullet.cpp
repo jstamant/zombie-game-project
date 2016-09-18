@@ -39,7 +39,7 @@ void Bullet::update_logic(void) {
         //find_first_collision();
         collision_list = entitymanager_->collision_line(line[0].position, line[1].position);
         if ( !collision_list.empty() ) {
-            entitymanager_->del_entity((collision_list.front())->get_id());
+            collision_list.front()->take_damage(20);
             line[1].position = entitymanager_->pop_collision_point();
             collision_list.clear();
         }

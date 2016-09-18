@@ -22,8 +22,10 @@ class UserInterface: public Entity
     private:
         virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
         int m_ammo;
-        sf::Font m_ammo_font;
+        int m_health;
+        sf::Font m_font;
         sf::Text m_ammo_text;
+        sf::Text m_health_text;
 };
 
 #endif //_USERINTERFACE_H_

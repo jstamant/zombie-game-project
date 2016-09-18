@@ -4,8 +4,13 @@
 
 //Include dependencies
 #include "character.h"
-#include <cmath>
 #include "enemy.h"
+#include "entity.h"
+#include "entitymanager.h"
+#include <math.h>
+
+//DEBUG
+#include <iostream>
 
 //TODO remove this once the global is phased out
 extern Character* g_character;
@@ -15,6 +20,11 @@ Enemy::Enemy() {
     sprite_.setTexture(texture);
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
+    m_health = 100;
+}
+
+Enemy::Enemy(int x, int y): Enemy::Enemy() {
+    set_position(x, y);
 }
 
 /* Steps the enemy directly towards the character.
@@ -39,7 +49,37 @@ void Enemy::seek_player(void) {
 
 void Enemy::update_logic(void) {
     seek_player();
+    if (m_health <= 0) {
+        entitymanager_->del_entity(id_);
+    }
+    collision_list = entitymanager_->check_collisions(rect_);
+    if ( !collision_list.empty() ) {
+        for (std::list<Entity*>::iterator it=collision_list.begin(); it!=collision_list.end(); it++) {
+            if ( (*it)->get_id() != id_ ) {
+                //move_away_from(*it);
+                if ( (*it)->is_character() ) {
+                    (*it)->take_damage(1);
+                }
+            }
+        }
+        collision_list.clear();
+    }
 }
+
+/* Slightly moves the enemy away from a colliding entity.
+ * @param Entity in collision with the enemy.
+ */
+/*void Enemy::move_away_from(Entity* entity) {
+    sf::Vector2f entity_position = entity->get_position();
+    sf::Vector2f position(x_, y_);
+    sf::Vector2f distance_vector = entity_position - position;
+    float angle = atan2(distance_vector.y, distance_vector.x) * 180 / PI;
+    //float distance = sqrt(pow(distance_vector.x,2)+pow(distance_vector.y,2));
+    float move_x = -0.5*cos(angle);
+    float move_y = -0.5*sin(angle);
+    move(move_x, move_y);
+}
+*/
 
 bool Enemy::is_collidable(void) { return true; }
 bool Enemy::is_enemy(void)      { return true; }

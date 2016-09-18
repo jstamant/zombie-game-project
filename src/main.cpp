@@ -12,6 +12,8 @@
 #include "entitymanager.h"
 #include "inputhandler.h"
 #include "pickup.h"
+#include <stdlib.h>
+#include <time.h>
 #include "userinterface.h"
 
 //Make this character reference global for now... :/
@@ -19,6 +21,7 @@ Character* g_character = NULL;
 
 int main()
 {
+    srand(time(NULL));
     //Define core resources
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_CAPTION);
     sf::Mouse mouse;
@@ -31,7 +34,6 @@ int main()
 
     //Create some test entities
     entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
-    entitymanager.new_entity(new Enemy);
     entitymanager.new_entity(new UserInterface);
     entitymanager.new_entity(new Pickup(100, 100));
     long unsigned int enemy_spawn = 0;
@@ -47,11 +49,11 @@ int main()
         entitymanager.update_all();
         //DEBUG
         if (enemy_spawn++ >= 100) {
-            entitymanager.new_entity(new Enemy);
+            entitymanager.new_entity(new Enemy(WINDOW_WIDTH+32,rand()%WINDOW_HEIGHT));
             enemy_spawn = 0;
         }
-        if (pickup_spawn++ >= 700) {
-            entitymanager.new_entity(new Pickup(300,300));
+        if (pickup_spawn++ >= 190) {
+            entitymanager.new_entity(new Pickup(rand()%(WINDOW_WIDTH/2),rand()%WINDOW_HEIGHT));
             pickup_spawn = 0;
         }
 

@@ -25,6 +25,8 @@ class Entity: public sf::Drawable, public Subject
         void set_id(int);
         void set_position(float, float);
         int  get_id(void);
+        int  get_health(void);
+        sf::Vector2f get_position(void);
         void move(float, float);
         sf::FloatRect get_rect(void);
         virtual bool is_bullet(void);
@@ -34,12 +36,14 @@ class Entity: public sf::Drawable, public Subject
         virtual bool is_pickup(void);
         virtual void update_logic(void) = 0;
         virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
+        void take_damage(int);
     protected:
         sf::Texture texture;
         sf::Sprite sprite_;
         float x_;
         float y_;
         int id_;
+        int m_health;
         sf::FloatRect rect_;
         sf::RenderWindow* window_;
         sf::Mouse* mouse_;
