@@ -64,6 +64,31 @@ void Enemy::update_logic(void) {
         }
         collision_list.clear();
     }
+    //Check for collisions with solids
+    collision_list = entitymanager_->check_collisions(rect_);
+    if ( !collision_list.empty() ) {
+        for (std::list<Entity*>::iterator it=collision_list.begin(); it!=collision_list.end(); it++) {
+            if ( (*it)->is_solid() ) {
+                sf::FloatRect solid_rect = (*it)->get_rect();
+                rect_.intersects(solid_rect, m_intersect_rect);
+                //Adjust character position depending on side of entry
+                if ( m_intersect_rect.width < m_intersect_rect.height) {
+                    if ( rect_.left < solid_rect.left ) {
+                        move(-m_intersect_rect.width, 0);
+                    }else{
+                        move(m_intersect_rect.width, 0);
+                    }
+                }else{
+                    if ( rect_.top < solid_rect.top ) {
+                        move(0, -m_intersect_rect.height);
+                    }else{
+                        move(0, m_intersect_rect.height);
+                    }
+                }
+            }
+        }
+        collision_list.clear();
+    }
 }
 
 /* Slightly moves the enemy away from a colliding entity.

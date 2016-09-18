@@ -34,6 +34,7 @@ class Entity: public sf::Drawable, public Subject
         virtual bool is_collidable(void);
         virtual bool is_enemy(void);
         virtual bool is_pickup(void);
+        virtual bool is_solid(void);
         virtual void update_logic(void) = 0;
         virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
         void take_damage(int);
@@ -44,6 +45,7 @@ class Entity: public sf::Drawable, public Subject
         float y_;
         int id_;
         int m_health;
+        sf::FloatRect m_intersect_rect;
         sf::FloatRect rect_;
         sf::RenderWindow* window_;
         sf::Mouse* mouse_;

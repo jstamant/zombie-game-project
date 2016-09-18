@@ -85,11 +85,37 @@ void Character::update_logic(void)
     if (m_health <= 0) {
         entitymanager_->del_entity(id_);
     }
+    //Check for collisions with pickups
     m_collision_list = entitymanager_->check_collisions_pickups(rect_);
     if ( !m_collision_list.empty() ) {
         for (std::list<Entity*>::iterator it=m_collision_list.begin(); it!=m_collision_list.end(); it++) {
             m_ammo += 10;
             entitymanager_->del_entity((*it)->get_id());
+        }
+        m_collision_list.clear();
+    }
+    //Check for collisions with solids
+    m_collision_list = entitymanager_->check_collisions(rect_);
+    if ( !m_collision_list.empty() ) {
+        for (std::list<Entity*>::iterator it=m_collision_list.begin(); it!=m_collision_list.end(); it++) {
+            if ( (*it)->is_solid() ) {
+                sf::FloatRect solid_rect = (*it)->get_rect();
+                rect_.intersects(solid_rect, m_intersect_rect);
+                //Adjust character position depending on side of entry
+                if ( m_intersect_rect.width < m_intersect_rect.height) {
+                    if ( rect_.left < solid_rect.left ) {
+                        move(-m_intersect_rect.width, 0);
+                    }else{
+                        move(m_intersect_rect.width, 0);
+                    }
+                }else{
+                    if ( rect_.top < solid_rect.top ) {
+                        move(0, -m_intersect_rect.height);
+                    }else{
+                        move(0, m_intersect_rect.height);
+                    }
+                }
+            }
         }
         m_collision_list.clear();
     }

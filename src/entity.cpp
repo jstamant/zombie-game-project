@@ -61,6 +61,7 @@ bool Entity::is_character(void)  { return false; }
 bool Entity::is_collidable(void) { return false; }
 bool Entity::is_enemy(void)      { return false; }
 bool Entity::is_pickup(void)     { return false; }
+bool Entity::is_solid(void)      { return false; }
 
 /* Provide a default draw function for all entities that can be overriden by
  * derived classes. By default, render the entity's sprite.

@@ -12,6 +12,7 @@
 #include "entitymanager.h"
 #include "inputhandler.h"
 #include "pickup.h"
+#include "solid.h"
 #include <stdlib.h>
 #include <time.h>
 #include "userinterface.h"
@@ -35,7 +36,7 @@ int main()
     //Create some test entities
     entitymanager.new_entity(new Character(WINDOW_WIDTH/2, WINDOW_HEIGHT/2));
     entitymanager.new_entity(new UserInterface);
-    entitymanager.new_entity(new Pickup(100, 100));
+    entitymanager.new_entity(new Solid(100, 100));
     long unsigned int enemy_spawn = 0;
     long unsigned int pickup_spawn = 0;
 

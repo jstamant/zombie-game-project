@@ -33,6 +33,7 @@ class Character: public Entity
     private:
         double angle;
         int m_ammo;
+        sf::FloatRect m_intersect_rect;
         std::list<Entity*> m_collision_list;
 };
 
