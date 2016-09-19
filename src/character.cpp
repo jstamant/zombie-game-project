@@ -18,9 +18,15 @@
 //DEBUG
 #include <iostream>
 
-Character::Character() {
-    texture.loadFromFile("character.png"); //Needs optimizing...
-    sprite_.setTexture(texture);
+Character::Character(){
+    //Added by Joel
+    spriteOriginX = 10;
+    spriteOriginY = 10;
+    spriteWidth = 32;
+    spriteHeight = 32;
+    set_sprite();
+    //
+
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
     m_ammo = 20;

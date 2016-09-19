@@ -38,8 +38,22 @@ class Entity: public sf::Drawable, public Subject
         virtual void update_logic(void) = 0;
         virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
         void take_damage(int);
+
+        //Added by Joel
+        void set_sprite();
+        //
+
     protected:
-        sf::Texture texture;
+        //Added by Joel
+        sf::Texture texture; //Except this
+        int spriteOriginX;
+        int spriteOriginY;
+        int spriteWidth;
+        int spriteHeight;
+        float orientation; //In radians
+        //
+
+
         sf::Sprite sprite_;
         float x_;
         float y_;

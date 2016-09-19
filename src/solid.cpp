@@ -9,8 +9,14 @@
 #include "solid.h"
 
 Solid::Solid() {
-    texture.loadFromFile("wall.png"); //Needs optimizing...
-    sprite_.setTexture(texture);
+    //Added by Joel
+    spriteOriginX = 90;
+    spriteOriginY = 90;
+    spriteWidth = 32;
+    spriteHeight = 32;
+    set_sprite();
+    //
+
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
 }
