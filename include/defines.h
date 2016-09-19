@@ -1,7 +1,7 @@
 #ifndef _DEFINES_H
 #define _DEFINES_H
 
-#define WINDOW_CAPTION "Zombie Game Project"
+#define WINDOW_CAPTION "Zombie Game Project 1995 1/3"
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 

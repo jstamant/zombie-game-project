@@ -39,7 +39,10 @@
 		<Unit filename="include/entitymanager.h" />
 		<Unit filename="include/inputhandler.h" />
 		<Unit filename="include/observer.h" />
+		<Unit filename="include/pickup.h" />
+		<Unit filename="include/solid.h" />
 		<Unit filename="include/subject.h" />
+		<Unit filename="include/userinterface.h" />
 		<Unit filename="src/bullet.cpp" />
 		<Unit filename="src/character.cpp" />
 		<Unit filename="src/enemy.cpp" />
@@ -48,7 +51,10 @@
 		<Unit filename="src/inputhandler.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/observer.cpp" />
+		<Unit filename="src/pickup.cpp" />
+		<Unit filename="src/solid.cpp" />
 		<Unit filename="src/subject.cpp" />
+		<Unit filename="src/userinterface.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
