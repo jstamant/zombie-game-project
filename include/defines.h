@@ -12,8 +12,6 @@
 #define SPEED   3
 #define Z_SPEED 1
 
-#define PI 3.14159265 //TEMP, THIS SHOULD BE ELSEWHERE??? LIKE IN A LIBRARY?
-
 #define BULLET_FLASH_DURATION 5
 #define BULLET_RANGE 1000
 
@@ -29,6 +27,16 @@ enum Event
     MOVE_LEFT,
     MOVE_RIGHT,
     NEW_BULLET
+};
+
+/* List of entities sorted by their row on the spritesheet.
+ */
+enum EntityRow
+{
+    CHARACTER = 1,
+    ZOMBIE,
+    WALL,
+    AMMO
 };
 
 #endif

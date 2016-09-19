@@ -18,7 +18,6 @@ class Enemy: public Entity
         virtual bool is_enemy(void);
     private:
         void seek_player(void);
-        //void move_away_from(Entity*);
         std::list<Entity*> collision_list;
 };
 

@@ -23,6 +23,7 @@ class EntityManager: public Observer
         virtual void on_notify(Event, int);
         void render(void);
         void new_entity(Entity*);
+        void new_tile(Entity*);
         void del_entity(int);
         sf::Vector2f pop_collision_point(void);
         void update_all(void);
@@ -40,6 +41,7 @@ class EntityManager: public Observer
         std::list<Entity*> entities;
         std::list<Entity*> collidables;
         std::list<Entity*> pickups;
+        std::list<Entity*> tiles;
 };
 
 #endif

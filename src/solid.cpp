@@ -9,13 +9,11 @@
 #include "solid.h"
 
 Solid::Solid() {
-    //Added by Joel
-    spriteOriginX = 90;
-    spriteOriginY = 90;
+    spriteOriginX = 0;
+    spriteOriginY = 66;
     spriteWidth = 32;
     spriteHeight = 32;
     set_sprite();
-    //
 
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();

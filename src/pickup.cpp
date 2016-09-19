@@ -7,10 +7,10 @@
 
 Pickup::Pickup() {
     //Added by Joel
-    spriteOriginX = 10;
-    spriteOriginY = 90;
-    spriteWidth = 30;
-    spriteHeight = 21;
+    spriteOriginX = 0;
+    spriteOriginY = 99;
+    spriteWidth = 32;
+    spriteHeight = 32;
     set_sprite();
     //
 
@@ -23,7 +23,7 @@ Pickup::Pickup(int x, int y): Pickup::Pickup() {
 }
 
 void Pickup::update_logic(void) {
-    rect_ = sprite_.getGlobalBounds();
+    //rect_ = sprite_.getGlobalBounds();
 }
 
 bool Pickup::is_pickup(void) { return true; }

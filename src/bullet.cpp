@@ -28,7 +28,6 @@ Bullet::Bullet(sf::Vector2f p1, sf::Vector2f p2):
     //notify(NEW_BULLET, id_);
     checked_collisions = false;
     extend_line();
-    std::cout << "Bullet constructor!\n";
 }
 
 sf::VertexArray Bullet::get_line(void) { return line; }

@@ -62,9 +62,14 @@ void EntityManager::on_notify(Event event, int id) {
     }
 }
 
-/* Renders all drawable entities to the window.
+/* Renders the background, and all entities to the window.
  */
 void EntityManager::render(void) {
+    //Draw the background first
+    for (std::list<Entity*>::iterator it=tiles.begin(); it!=tiles.end(); it++) {
+        window_->draw(**it);
+    }
+    //Overlay the entities on the background
     for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
         window_->draw(**it);
     }
@@ -212,5 +217,14 @@ sf::Vector2f EntityManager::pop_collision_point(void) {
     sf::Vector2f collision_point = m_collision_point;
     m_collision_point = sf::Vector2f(0, 0);
     return collision_point;
+}
+
+/* Adds a background tile to the list.
+ */
+void EntityManager::new_tile(Entity* tile) {
+    tile->set_window(window_);
+    tile->set_mouse(mouse_);
+    tile->set_entitymanager(this);
+    tiles.push_back(tile);
 }
 

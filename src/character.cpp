@@ -12,24 +12,20 @@
 #include "entity.h"
 #include "entitymanager.h"
 #include <math.h>
-//#include "observer.h"
-//#include "subject.h"
 
 //DEBUG
 #include <iostream>
 
 Character::Character(){
-    //Added by Joel
-    spriteOriginX = 10;
-    spriteOriginY = 10;
+    spriteOriginX = 0;
+    spriteOriginY = 0;
     spriteWidth = 32;
     spriteHeight = 32;
     set_sprite();
-    //
 
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
-    m_ammo = 20;
+    m_ammo = 100;
     m_health = 100;
 }
 
@@ -67,8 +63,8 @@ void Character::rotate(void) {
     sf::Vector2i mouse_vector(mouse_->getPosition(*window_));
     sf::Vector2i sprite_vector(sprite_.getPosition());
     sf::Vector2i angle_vector(mouse_vector - sprite_vector);
-    angle = atan2(angle_vector.y, angle_vector.x) * 180 / PI;
-    sprite_.setRotation(angle);
+    angle_ = atan2(angle_vector.y, angle_vector.x) * 180 / M_PI;
+    sprite_.setRotation(angle_);
 }
 
 /* Generates a bullet, and passes it to the entity manager for tracking.

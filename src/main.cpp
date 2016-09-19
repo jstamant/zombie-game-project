@@ -11,6 +11,7 @@
 #include "enemy.h"
 #include "entitymanager.h"
 #include "inputhandler.h"
+#include "map.h"
 #include "pickup.h"
 #include "solid.h"
 #include <stdlib.h>
@@ -28,6 +29,7 @@ int main()
     sf::Mouse mouse;
 
     EntityManager entitymanager(&window, &mouse);
+    Map map("test.tmx", &entitymanager);
     InputHandler input_handler(&window);
     input_handler.add_observer(&entitymanager);
 

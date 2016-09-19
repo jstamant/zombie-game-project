@@ -20,7 +20,7 @@ OPT_INCLUDES =
 OPT_LIBS     =
 
 # Libraries required for linking
-LIBS = -lsfml-graphics -lsfml-system -lsfml-window
+LIBS = -lsfml-graphics -lsfml-system -lsfml-window -ltinyxml2
 
 #
 #-- Directory structure and files --#

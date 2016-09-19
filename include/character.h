@@ -17,13 +17,13 @@ class Character: public Entity
     public:
         Character();
         Character(int, int);
-        float get_x(void);
-        float get_y(void);
-        double get_angle(void);
-        void move_up(void);
-        void move_down(void);
-        void move_left(void);
-        void move_right(void);
+        float get_x(void);     //DEPRECATED
+        float get_y(void);     //DEPRECATED
+        double get_angle(void);//DEPRECATED
+        void move_up(void);    //DEPRECATED
+        void move_down(void);  //DEPRECATED
+        void move_left(void);  //DEPRECATED
+        void move_right(void); //DEPRECATED
         void rotate(void);
         void shoot(void);
         virtual void update_logic(void);

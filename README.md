@@ -42,9 +42,9 @@ implement:
 You can get this to work on Windows if you have some IDE or compiler savvy, but
 by far the easiest way to try this out is using `make` on Linux.
 
-I believe this game's only dependency is SFML-2.4.0. Make sure that's
-installed, then enter the following command in the same directory as the
-makefile:
+I believe this game's only dependencies are SFML-2.4.0 and tinyxml2. Before
+installation, make sure that they're installed, then enter the following
+command in the same directory as the makefile:
 
 `$ make`
 
