@@ -16,7 +16,10 @@
 extern Character* g_character;
 
 Enemy::Enemy() {
-    texture.loadFromFile("enemy.png");
+    sf::Image image;
+    image.loadFromFile("enemy.png");
+    image.createMaskFromColor(sf::Color::White);
+    texture.loadFromImage(image);
     sprite_.setTexture(texture);
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
@@ -35,12 +38,12 @@ void Enemy::seek_player(void) {
     float character_y = g_character->get_y();
     float dx = character_x - x_;
     float dy = character_y - y_;
-    float distance = sqrt(pow(dx,2) + pow(dy,2));
-    float ratio = Z_SPEED/distance;
 
-    //Calculate x and y movement
-    float move_x = ratio*dx;
-    float move_y = ratio*dy;
+    float angle;
+    angle = atan2(dy, dx);
+    float move_x = Z_SPEED*cos(angle);
+    float move_y = Z_SPEED*sin(angle);
+    sprite_.setRotation(angle*180/M_PI);
 
     //Perform movement
     move(move_x, move_y);
