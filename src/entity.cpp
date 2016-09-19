@@ -7,6 +7,8 @@
 
 //Include dependencies
 #include "entity.h"
+#include "defines.h"
+#include <iostream>
 
 Entity::Entity() : Entity::Entity(0, 0) {
     x_ = 0;
@@ -16,6 +18,7 @@ Entity::Entity() : Entity::Entity(0, 0) {
     mouse_  = NULL;
     window_ = NULL;
     entitymanager_ = NULL;
+    orientation = 0;
 }
 
 Entity::Entity(int x, int y) {
@@ -78,3 +81,21 @@ sf::Vector2f Entity::get_position(void) {
     return sf::Vector2f(x_, y_);
 }
 
+//Added by Joel
+void Entity::set_sprite(){
+    sf::Image image;
+    if(!image.loadFromFile("MasterSpriteSheet.png")){
+        std::cout << "Failed to load spritesheet image" << std::endl;
+    }
+    image.createMaskFromColor(sf::Color::Magenta);
+
+    if(!texture.loadFromImage(image)){
+        std::cout << "Failed to load spritesheet texture" << std::endl;
+    }
+    sprite_.setTexture(texture);
+    sprite_.setTextureRect(sf::IntRect(spriteOriginX, spriteOriginY, spriteWidth, spriteHeight));
+    sprite_.setPosition(x_, y_);
+    sprite_.setRotation(orientation*180/M_PI);
+    sprite_.setScale(SCALE, SCALE);
+}
+//

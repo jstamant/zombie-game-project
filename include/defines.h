@@ -19,6 +19,8 @@
 
 #define MAX_OBSERVERS 2
 
+#define SCALE 1
+
 enum Event
 {
     SHOOT,

@@ -16,11 +16,15 @@
 extern Character* g_character;
 
 Enemy::Enemy() {
-    sf::Image image;
-    image.loadFromFile("enemy.png");
-    image.createMaskFromColor(sf::Color::White);
-    texture.loadFromImage(image);
-    sprite_.setTexture(texture);
+    //Added by Joel
+    spriteOriginX = 10 + 40*(rand()%2);
+    spriteOriginY = 50;
+    spriteWidth = 32;
+    spriteHeight = 32;
+    set_sprite();
+    //
+
+
     sprite_.setOrigin(16, 16);
     rect_ = sprite_.getGlobalBounds();
     m_health = 100;
