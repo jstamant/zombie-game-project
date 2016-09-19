@@ -25,6 +25,9 @@
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
+			<Add library="sfml-graphics" />
+			<Add library="sfml-window" />
+			<Add library="sfml-system" />
 			<Add directory="C:/SFML-2.4.0/lib" />
 		</Linker>
 		<Unit filename="include/bullet.h" />
