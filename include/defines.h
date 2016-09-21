@@ -26,7 +26,9 @@ enum Event
     MOVE_DOWN,
     MOVE_LEFT,
     MOVE_RIGHT,
-    NEW_BULLET
+    NEW_BULLET,
+    NEW_ENTITY,
+    KILL_ENTITY
 };
 
 /* List of entities sorted by their row on the spritesheet.
@@ -38,6 +40,8 @@ enum EntityRow
     WALL,
     AMMO
 };
+
+typedef int ID;
 
 #endif
 

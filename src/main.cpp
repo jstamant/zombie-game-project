@@ -7,6 +7,7 @@
 
 //Include dependencies
 #include "character.h"
+#include "collisionmanager.h"
 #include "defines.h"
 #include "enemy.h"
 #include "entitymanager.h"
@@ -31,7 +32,9 @@ int main()
     EntityManager entitymanager(&window, &mouse);
     Map map("test.tmx", &entitymanager);
     InputHandler input_handler(&window);
-    input_handler.add_observer(&entitymanager);
+    input_handler.addObserver(&entitymanager);
+    CollisionManager collisionManager;
+    entitymanager.addObserver(&collisionManager);
 
     window.setFramerateLimit(FRAMELIMIT);
 
@@ -49,13 +52,15 @@ int main()
         input_handler.handle_input();
 
         //Perform game logic
+        collisionManager.checkAllCollisions();
+        collisionManager.processCollisions();
         entitymanager.update_all();
         //DEBUG
         if (enemy_spawn++ >= 100) {
             entitymanager.new_entity(new Enemy(WINDOW_WIDTH+32,rand()%WINDOW_HEIGHT));
             enemy_spawn = 0;
         }
-        if (pickup_spawn++ >= 190) {
+        if (pickup_spawn++ >= 370) {
             entitymanager.new_entity(new Pickup(rand()%(WINDOW_WIDTH/2),rand()%WINDOW_HEIGHT));
             pickup_spawn = 0;
         }

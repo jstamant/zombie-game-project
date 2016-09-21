@@ -7,6 +7,7 @@
 
 //Include dependencies
 #include "entity.h"
+#include "entitymanager.h"
 #include "defines.h"
 #include <iostream>
 #include <math.h>
@@ -52,11 +53,33 @@ void Entity::move(float x, float y) {
 // Access functions
 //************************************************
 
-int           Entity::get_health(void)   { return m_health; }
-int           Entity::get_id(void)       { return id_; }
-sf::Vector2f  Entity::get_position(void) { return sf::Vector2f(x_, y_); }
-sf::FloatRect Entity::get_rect(void)     { return rect_; }
-sf::Sprite    Entity::get_sprite(void)   { return sprite_; }
+int            Entity::get_health(void)   { return m_health; }
+int            Entity::get_id(void)       { return id_; }
+sf::Vector2f   Entity::get_position(void) { return sf::Vector2f(x_, y_); }
+sf::FloatRect* Entity::get_rect(void)     { return &rect_; }
+sf::Sprite     Entity::get_sprite(void)   { return sprite_; }
+
+
+void Entity::setCollisionList(std::list<ID> list) { collisionList_ = list; }
+void Entity::set_id(int id) { id_ = id; }
+
+void Entity::set_entitymanager(EntityManager* entitymanager) { entitymanager_ = entitymanager; }
+
+
+void Entity::set_mouse(sf::Mouse* mouse) {
+    mouse_ = mouse;
+}
+
+/* Set the absolute position of the entity.
+ */
+void Entity::set_position(float x, float y) {
+    x_ = x;
+    y_ = y;
+    sprite_.setPosition(x, y);
+    rect_.left = x - origin_x_;
+    rect_.top  = y - origin_y_;
+}
+
 
 //************************************************
 // Entity-type checking functions (deprecated?)
@@ -77,28 +100,9 @@ void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(sprite_, states);
 }
 
-void Entity::set_entitymanager(EntityManager* entitymanager) {
-    entitymanager_ = entitymanager;
-}
-
-void Entity::set_id(int id) { id_ = id; }
-
-void Entity::set_mouse(sf::Mouse* mouse) {
-    mouse_ = mouse;
-}
-
-/* Set the absolute position of the entity.
- */
-void Entity::set_position(float x, float y) {
-    x_ = x;
-    y_ = y;
-    sprite_.setPosition(x, y);
-    rect_.left = x - origin_x_;
-    rect_.top  = y - origin_y_;
-}
-
 /* Set's the sprite's sub-texture rect on the spritesheet.
  * Added by Joel
+ * TODO rename to initialize_sprite
  */
 void Entity::set_sprite(){
     sf::Image image;
@@ -116,7 +120,15 @@ void Entity::set_window(sf::RenderWindow* window) {
     window_ = window;
 }
 
+//******************************************************************************
+// Update functions
+//******************************************************************************
+
 void Entity::take_damage(int damage) {
     m_health -= damage;
+}
+
+void Entity::kill(void) {
+    entitymanager_->del_entity(id_);
 }
 

@@ -1,8 +1,8 @@
 #ifndef _BULLET_H
 #define _BULLET_H
-//************************************************
+//******************************************************************************
 // bullet.h
-//************************************************
+//******************************************************************************
 
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
@@ -16,7 +16,9 @@ class Bullet: public Entity
     public:
         Bullet(sf::Vector2f, sf::Vector2f);
         //~Bullet();
+        //Access functions
         sf::VertexArray get_line(void);
+        void setEndpoint(sf::Vector2f);
         virtual void update_logic(void);
         virtual bool is_bullet(void);
     private:

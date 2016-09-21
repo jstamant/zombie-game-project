@@ -4,15 +4,16 @@
 // observer.h
 //************************************************
 
+//Forward declarations
+class Entity;
+
 //Include dependencies
 #include "defines.h"
-#include "entity.h"
 
-//This class could greatly benefit from templating
 class Observer
 {
     public:
-        virtual void on_notify(Event event, int id) = 0;
+        virtual void onNotify(Event event, Entity* id) = 0;
     private:
 };
 

@@ -42,7 +42,7 @@ void UserInterface::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 
 void UserInterface::update_logic(void) {
     //Set ammo to the player's ammo
-    m_ammo = g_character->get_ammo();
+    m_ammo = g_character->getAmmo();
     m_ammo_text.setString(std::to_string(m_ammo));
     //Set health bar to player's health
     m_health = g_character->get_health();

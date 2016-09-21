@@ -1,6 +1,6 @@
-//************************************************
+//******************************************************************************
 // entitymanager.cpp
-//************************************************
+//******************************************************************************
 
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
@@ -32,7 +32,11 @@ EntityManager::EntityManager(sf::RenderWindow* window, sf::Mouse* mouse) {
         available_ids.push_back(i);
 }
 
-void EntityManager::on_notify(Event event, int id) {
+//******************************************************************************
+// Access functions
+//******************************************************************************
+
+void EntityManager::onNotify(Event event, Entity* entity) {
     switch (event) {
         case SHOOT:
             if (character_)
@@ -40,19 +44,19 @@ void EntityManager::on_notify(Event event, int id) {
             break;
         case MOVE_UP:
             if (character_)
-                character_->move_up();
+                character_->move(0, -SPEED);
             break;
         case MOVE_DOWN:
             if (character_)
-                character_->move_down();
+                character_->move(0, SPEED);
             break;
         case MOVE_LEFT:
             if (character_)
-                character_->move_left();
+                character_->move(-SPEED, 0);
             break;
         case MOVE_RIGHT:
             if (character_)
-                character_->move_right();
+                character_->move(SPEED, 0);
             break;
         case NEW_BULLET:
             //do something;
@@ -76,11 +80,11 @@ void EntityManager::render(void) {
 }
 
 void EntityManager::new_entity(Entity* entity) {
-    std::cout << "New ID: " << available_ids.front() << std::endl; //DEBUG
     entity->set_window(window_);
     entity->set_mouse(mouse_);
     entity->set_entitymanager(this);
     entity->set_id(available_ids.front());
+    std::cout << "EM new ID " << entity->get_id() << std::endl;
     available_ids.pop_front();
     if (entity->is_collidable())
         collidables.push_back(entity);
@@ -92,12 +96,12 @@ void EntityManager::new_entity(Entity* entity) {
         g_character = dynamic_cast<Character*>(entity);
     }
     entities.push_back(entity);
+    notify(NEW_ENTITY, entity);
 }
 
 /* Add an entity to the purge list for later removal.
  * Entities can't be deleted during the update() loop, because the iterator in
- * the update() loop will no longer point to the next entity. Undefined
- * behaviour follows.
+ * the update() loop will no longer point to the next entity.
  * @param id: ID of the entity for removal
  */
 void EntityManager::del_entity(int id) {
@@ -116,6 +120,7 @@ void EntityManager::purge(void) {
         purge_list.pop();
         for (std::list<Entity*>::iterator it=entities.begin(); it!=entities.end(); it++) {
             if ( (*it)->get_id() == delete_id ) {
+                notify(KILL_ENTITY, *it);
                 delete *it;
                 entities.erase(it);
                 break;
@@ -153,7 +158,7 @@ void EntityManager::update_all(void) {
 std::list<Entity*> EntityManager::check_collisions(sf::FloatRect rect) {
     std::list<Entity*> collision_list;
     for (std::list<Entity*>::iterator it=collidables.begin(); it!=collidables.end(); it++) {
-        if ((*it)->get_rect().intersects(rect))
+        if ((*it)->get_rect()->intersects(rect))
             collision_list.push_back(*it);
     }
     return collision_list;
@@ -167,7 +172,7 @@ std::list<Entity*> EntityManager::check_collisions_pickups(sf::FloatRect rect)
 {
     std::list<Entity*> pickup_list;
     for (std::list<Entity*>::iterator it=pickups.begin(); it!=pickups.end(); it++) {
-        if ((*it)->get_rect().intersects(rect))
+        if ((*it)->get_rect()->intersects(rect))
             pickup_list.push_back(*it);
     }
     return pickup_list;
@@ -196,7 +201,7 @@ std::list<Entity*> EntityManager::collision_line(sf::Vector2f source, sf::Vector
     for (int i=0; i<distance; i++) {
         //Check collisions at (check_x, check_y)
         for (std::list<Entity*>::iterator it=collidables.begin(); it!=collidables.end(); it++) {
-            if ((*it)->get_rect().contains(check_x, check_y)) {
+            if ((*it)->get_rect()->contains(check_x, check_y)) {
                 if ( !(*it)->is_character() ) {
                     collision_list.push_back(*it);
                     if (m_collision_point == sf::Vector2f(0, 0))

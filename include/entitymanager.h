@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 
 //Include dependencies
+#include "defines.h"
 #include <deque>
 #include "entity.h"
 #include "character.h"
@@ -16,11 +17,14 @@
 #include "observer.h"
 #include <stack>
 
-class EntityManager: public Observer
+class EntityManager: public Observer, public Subject
 {
     public:
         EntityManager(sf::RenderWindow*, sf::Mouse*);
-        virtual void on_notify(Event, int);
+        //Access functions
+        void getEntityByID(ID);
+        //Communication functions
+        virtual void onNotify(Event, Entity*);
         void render(void);
         void new_entity(Entity*);
         void new_tile(Entity*);

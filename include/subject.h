@@ -5,22 +5,22 @@
 //************************************************
 
 //Forward declarations
+class Entity;
 class Observer;
 
 //Include dependencies
-#include "entity.h"
-#include "observer.h"
+#include "defines.h"
 #include <list>
 
 class Subject
 {
     public:
-        void add_observer(Observer*);
-        void remove_observer(Observer*);
+        void addObserver(Observer*);
+        void removeObserver(Observer*);
     private:
-        std::list<Observer*> observers;
+        std::list<Observer*> observers_;
     protected:
-        void notify(Event, int=0);
+        void notify(Event, Entity*);
 };
 
 #endif

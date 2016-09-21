@@ -1,6 +1,6 @@
-//************************************************
+//******************************************************************************
 // bullet.cpp
-//************************************************
+//******************************************************************************
 
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
@@ -30,9 +30,15 @@ Bullet::Bullet(sf::Vector2f p1, sf::Vector2f p2):
     extend_line();
 }
 
+//******************************************************************************
+// Access functions
+//******************************************************************************
+
 sf::VertexArray Bullet::get_line(void) { return line; }
+void Bullet::setEndpoint(sf::Vector2f point) { line[1].position = point; }
 
 void Bullet::update_logic(void) {
+    /*
     if (!checked_collisions) {
         //find_potential_collisions();
         //find_first_collision();
@@ -44,6 +50,7 @@ void Bullet::update_logic(void) {
         }
         checked_collisions = true;
     }
+    */
     if (--time_to_live == 0) {
         entitymanager_->del_entity(id_);
     }
@@ -76,7 +83,7 @@ void Bullet::find_first_collision(void) {
     for (int i=0; i<BULLET_RANGE; i++) {
         //Check collisions at check_x,check_y
         for (std::list<Entity*>::iterator it=collision_list.begin(); it!=collision_list.end(); it++) {
-            if ((*it)->get_rect().contains(check_x, check_y)) {
+            if ((*it)->get_rect()->contains(check_x, check_y)) {
                 if ( (*it)->is_character() ) {
                     std::cout << "Character!\n";
                     return;
