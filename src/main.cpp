@@ -22,12 +22,14 @@
 //Make these references global for now... :/
 Character* g_character = NULL;
 sf::View globalView;
+sf::RenderWindow* globalWindow;
 
 int main()
 {
     srand(time(NULL));
     //Define core resources
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_CAPTION);
+    globalWindow = &window;
     globalView = sf::View(sf::FloatRect(100, 100, WINDOW_WIDTH, WINDOW_HEIGHT));
     sf::Mouse mouse;
 

@@ -13,6 +13,7 @@
 
 //TODO remove this global when it's phased out properly
 extern Character* g_character;
+extern sf::RenderWindow* globalWindow;
 
 UserInterface::UserInterface() {
     m_font.loadFromFile("arial.ttf");
@@ -42,9 +43,11 @@ void UserInterface::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 
 void UserInterface::update_logic(void) {
     //Set ammo to the player's ammo
+    m_ammo_text.setPosition(globalWindow->mapPixelToCoords(sf::Vector2i(100, WINDOW_HEIGHT-32)));
     m_ammo = g_character->getAmmo();
     m_ammo_text.setString(std::to_string(m_ammo));
     //Set health bar to player's health
+    m_health_text.setPosition(globalWindow->mapPixelToCoords(sf::Vector2i(0, WINDOW_HEIGHT-32)));
     m_health = g_character->get_health();
     m_health_text.setString(std::to_string(m_health));
 }
