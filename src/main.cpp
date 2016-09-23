@@ -19,14 +19,16 @@
 #include <time.h>
 #include "userinterface.h"
 
-//Make this character reference global for now... :/
+//Make these references global for now... :/
 Character* g_character = NULL;
+sf::View globalView;
 
 int main()
 {
     srand(time(NULL));
     //Define core resources
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_CAPTION);
+    globalView = sf::View(sf::FloatRect(100, 100, WINDOW_WIDTH, WINDOW_HEIGHT));
     sf::Mouse mouse;
 
     EntityManager entitymanager(&window, &mouse);
@@ -66,6 +68,7 @@ int main()
         }
 
         //Render
+        window.setView(globalView);
         window.clear(sf::Color(192, 192, 192));
         entitymanager.render();
 
