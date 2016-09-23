@@ -80,23 +80,25 @@ void EntityManager::render(void) {
 }
 
 void EntityManager::new_entity(Entity* entity) {
-    entity->set_window(window_);
-    entity->set_mouse(mouse_);
-    entity->set_entitymanager(this);
-    entity->set_id(available_ids.front());
-    std::cout << "EM new ID " << entity->get_id() << std::endl;
-    available_ids.pop_front();
-    if (entity->is_collidable())
-        collidables.push_back(entity);
-    if (entity->is_pickup())
-        pickups.push_back(entity);
-    if (entity->is_character())
-    {
-        character_ = dynamic_cast<Character*>(entity);
-        g_character = dynamic_cast<Character*>(entity);
+    if ( !available_ids.empty() ) {
+        entity->set_window(window_);
+        entity->set_mouse(mouse_);
+        entity->set_entitymanager(this);
+        entity->set_id(available_ids.front());
+        std::cout << "EM new ID " << entity->get_id() << std::endl;
+        available_ids.pop_front();
+        if (entity->is_collidable())
+            collidables.push_back(entity);
+        if (entity->is_pickup())
+            pickups.push_back(entity);
+        if (entity->is_character())
+        {
+            character_ = dynamic_cast<Character*>(entity);
+            g_character = dynamic_cast<Character*>(entity);
+        }
+        entities.push_back(entity);
+        notify(NEW_ENTITY, entity);
     }
-    entities.push_back(entity);
-    notify(NEW_ENTITY, entity);
 }
 
 /* Add an entity to the purge list for later removal.
