@@ -115,9 +115,8 @@ void CollisionManager::bulletCollision(Entity* bullet) {
     float step_y = dy/distance;
     float check_x = source.x;
     float check_y = source.y;
-    //For every point along line:
+    //For every point along line, check where the collision occured
     for (int i=0; i<distance; i++) {
-        //Check collisions at (check_x, check_y)
         for (auto it=coarseCollisionList.begin(); it!=coarseCollisionList.end(); it++) {
             if ((*it)->get_rect()->contains(check_x, check_y)) {
                 if ( !(*it)->is_character() && !(*it)->is_pickup() ) {
@@ -127,7 +126,6 @@ void CollisionManager::bulletCollision(Entity* bullet) {
                 }
             }
         }
-        //Check next point in the line
         check_x += step_x;
         check_y += step_y;
     }

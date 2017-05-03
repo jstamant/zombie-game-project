@@ -170,7 +170,7 @@ std::list<Entity*> EntityManager::check_collisions(sf::FloatRect rect) {
  * @param Rectable to check collisions with pickups
  * @return List of all pickups that collide with the input rect
  */
-std::list<Entity*> EntityManager::check_collisions_pickups(sf::FloatRect rect)
+/*std::list<Entity*> EntityManager::check_collisions_pickups(sf::FloatRect rect)
 {
     std::list<Entity*> pickup_list;
     for (std::list<Entity*>::iterator it=pickups.begin(); it!=pickups.end(); it++) {
@@ -179,6 +179,7 @@ std::list<Entity*> EntityManager::check_collisions_pickups(sf::FloatRect rect)
     }
     return pickup_list;
 }
+*/
 
 /* Find all collision with a line. Collisions will be listed in order from
  * source to destination.
@@ -190,7 +191,7 @@ std::list<Entity*> EntityManager::check_collisions_pickups(sf::FloatRect rect)
  * TODO this checks if the entity is a character, so it's tailored for bullet
  * collision; which may or may not be out of the scope of this function...
  */
-std::list<Entity*> EntityManager::collision_line(sf::Vector2f source, sf::Vector2f dest) {
+/*std::list<Entity*> EntityManager::collision_line(sf::Vector2f source, sf::Vector2f dest) {
     std::list<Entity*> collision_list;
     float dx = dest.x - source.x;
     float dy = dest.y - source.y;
@@ -217,6 +218,7 @@ std::list<Entity*> EntityManager::collision_line(sf::Vector2f source, sf::Vector
     }
     return collision_list;
 }
+*/
 
 /* Returns, and resets the last collision_point.
  */

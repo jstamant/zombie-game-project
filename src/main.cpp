@@ -5,6 +5,10 @@
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
 
+//Include std dependencies
+#include <stdlib.h>
+#include <time.h>
+
 //Include dependencies
 #include "character.h"
 #include "collisionmanager.h"
@@ -13,10 +17,9 @@
 #include "entitymanager.h"
 #include "inputhandler.h"
 #include "map.h"
+#include "messagebus.h"
 #include "pickup.h"
 #include "solid.h"
-#include <stdlib.h>
-#include <time.h>
 #include "userinterface.h"
 
 //Make these references global for now... :/
@@ -35,10 +38,14 @@ int main()
 
     EntityManager entitymanager(&window, &mouse);
     Map map("test.tmx", &entitymanager);
-    InputHandler input_handler(&window);
-    input_handler.addObserver(&entitymanager);
+    InputHandler inputHandler(&window);
+    inputHandler.addObserver(&entitymanager);
     CollisionManager collisionManager;
     entitymanager.addObserver(&collisionManager);
+
+    MessageBus messageBus;
+    messageBus.registerSystem(&entitymanager);
+    messageBus.registerSystem(&collisionManager);
 
     window.setFramerateLimit(FRAMELIMIT);
 
@@ -53,12 +60,13 @@ int main()
     while (window.isOpen())
     {
         //Process input
-        input_handler.handle_input();
+        inputHandler.handle_input();
 
         //Perform game logic
         collisionManager.checkAllCollisions();
         collisionManager.processCollisions();
         entitymanager.update_all();
+
         //DEBUG
         if (enemy_spawn++ >= 100) {
             entitymanager.new_entity(new Enemy(WINDOW_WIDTH+32,rand()%WINDOW_HEIGHT));

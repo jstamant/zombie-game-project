@@ -10,11 +10,14 @@ class Entity;
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
 
+//Include std dependencies
+#include <list>
+#include <unordered_map>
+
 //Include dependencies
 #include "defines.h"
-#include <list>
 #include "observer.h"
-#include <unordered_map>
+#include "system.h"
 
 //Typedefs
 typedef std::list<Entity*>                EntityList;
@@ -24,7 +27,7 @@ typedef std::unordered_map<ID,EntityList> CollisionList;
 
 /* Class that calculates collisions, and keeps record of all entity hitboxes.
  */
-class CollisionManager: public Observer
+class CollisionManager: public System, public Observer
 {
     public:
         CollisionManager();

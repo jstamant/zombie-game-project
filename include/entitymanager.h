@@ -7,17 +7,20 @@
 //Include SFML dependencies
 #include <SFML/Graphics.hpp>
 
+//Include std dependencies
+#include <deque>
+#include <list>
+#include <stack>
+
 //Include dependencies
 #include "defines.h"
-#include <deque>
 #include "entity.h"
 #include "character.h"
 #include "bullet.h"
-#include <list>
 #include "observer.h"
-#include <stack>
+#include "system.h"
 
-class EntityManager: public Observer, public Subject
+class EntityManager: public System, public Observer, public Subject
 {
     public:
         EntityManager(sf::RenderWindow*, sf::Mouse*);
@@ -32,8 +35,8 @@ class EntityManager: public Observer, public Subject
         sf::Vector2f pop_collision_point(void);
         void update_all(void);
         std::list<Entity*> check_collisions(sf::FloatRect);
-        std::list<Entity*> check_collisions_pickups(sf::FloatRect);
-        std::list<Entity*> collision_line(sf::Vector2f, sf::Vector2f);
+        //std::list<Entity*> check_collisions_pickups(sf::FloatRect);
+        //std::list<Entity*> collision_line(sf::Vector2f, sf::Vector2f);
     private:
         void purge(void);
         std::stack<int> purge_list;
