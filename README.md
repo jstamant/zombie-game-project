@@ -56,11 +56,17 @@ or to build and run the game:
 
 Since this game is still in its infancy, contributions now will greatly shape
 the future of this game. I can see this as an attractive reason to contribute.
+Check out
+the [issues tracker](https://github.com/jstamant/zombie-game-project/issues) for
+programming tasks if it interests you.
 
 But there still exists A LOT of room for improvement. Most notably: the code
-base lacks coding standards, and the interfaces between classes were poorly
-planned. As much as I tried keeping my code organized, because of the huge
-intake of code to get this going, this game needs A LOT of refactoring.
+base lacks coding standards, although it's
+a
+[work in progress](https://github.com/jstamant/zombie-game-project/blob/master/README.md) and
+the interfaces between classes were poorly planned. As much as I tried keeping
+my code organized, because of the huge intake of code to get this going, this
+game needs A LOT of refactoring.
 
 I don't have a set workflow yet for this project, although I can say that I use
 `git rebase` over `git merge`. If you wish to contribute: please just contact
