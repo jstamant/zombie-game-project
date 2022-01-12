@@ -49,6 +49,7 @@ $(BINARY): $(OBJECTS)
 # Compile all object files and update their dependencies
 $(OBJ_DIR)/%.o: %.cpp
 	@echo $<
+	mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@ -I$(INCLUDE_DIR) $(OPT_INCLUDES)
 	$(CXX) -MM $< -MT "$(OBJ_DIR)/$*.o $(OBJ_DIR)/$*.d" -MF $(OBJ_DIR)/$*.d -I$(INCLUDE_DIR)
 	@echo
