@@ -2,11 +2,12 @@
 #-- Project configuration --#
 #
 
-BINARY = sfml-app.out
+BINARY = sdl-app.out
 
 # Compiler options and flags
 CXX      = g++
-CXXFLAGS = -Wall -Wno-switch -g
+CXXFLAGS = -Wall -Wno-switch -g -std=gnu++20
+#-std=gnu++20 seems to be required by EnTT ECS
 
 # Path to source files
 SRC_DIR     = src
@@ -20,7 +21,8 @@ OPT_INCLUDES =
 OPT_LIBS     =
 
 # Libraries required for linking
-LIBS = -lsfml-graphics -lsfml-system -lsfml-window -ltinyxml2
+#LIBS = -lsfml-graphics -lsfml-system -lsfml-window -ltinyxml2
+LIBS = -lSDL2 -lSDL2_image
 
 #
 #-- Directory structure and files --#

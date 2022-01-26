@@ -20,6 +20,7 @@ All of these are subject to change. Feel free to offer suggestions.
   classes. Example `EntityManager* entityManager;`
 * Use camel-case, starting with upper-case, on classes. Example
   `MessageBus`
+* No need to prefix global variables with 'g' or 'g_'
 
 ## Classes
 

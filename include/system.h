@@ -1,20 +1,13 @@
 #ifndef _SYSTEM_H_
 #define _SYSTEM_H_
-//******************************************************************************
-// system.h
-//******************************************************************************
 
-//Forward declarations
-class Message;
-class MessageBus;
+#include "defines.h"
+#include <set>
 
 class System
 {
-    public:
-        void processMessage(Message*);
-    private:
-        MessageBus* messageBus_;
+public:
+    std::set<Entity> entities_;
 };
 
 #endif //_SYSTEM_H_
-

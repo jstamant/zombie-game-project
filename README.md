@@ -20,9 +20,9 @@ a list of the main gameplay elements:
 
 * Movement
 * Zombies
-* Shooting
+* ~~Shooting~~
 * Health
-* Ammunition
+* ~~Ammunition~~
 
 # Planned features
 
@@ -39,12 +39,12 @@ implement:
 
 # Installation
 
-You can get this to work on Windows if you have some IDE or compiler savvy, but
-by far the easiest way to try this out is using `make` on Linux.
+You can get this to work on Windows if you have some IDE or compiler experience,
+but by far the easiest way to try this out is using `make` on Linux.
 
-I believe this game's only dependencies are SFML-2.4.0 and TinyXML-2. Before
-installation, make sure that they're installed, then enter the following
-command in the same directory as the makefile:
+I believe this game's only dependencies are SDL2 and EnTT. Before installation,
+make sure they're installed, then enter the following command in the same
+directory as the makefile:
 
 `$ make`
 
