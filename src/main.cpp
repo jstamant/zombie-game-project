@@ -58,7 +58,7 @@ int main(void)
     for (int i=0; i<100; i++)
         entitymanager.createZombie(player);
 
-    //While game is running
+    //While game is running; main game loop
     gGame.running = true;
     while (gGame.running)
     {
@@ -72,6 +72,8 @@ int main(void)
         }
 
         //Perform game logic
+        //All of the code here needs to be refactored.
+        //It's only here while I add/test new code.
         {
             entt::view view = registry.view<AI>();
             for (auto entity: view) {
@@ -150,7 +152,7 @@ int main(void)
 
 void close(void)
 {
-    //Destroy window    
+    //Destroy window
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;

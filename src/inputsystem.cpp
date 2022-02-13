@@ -12,13 +12,11 @@
 
 void InputSystem::init()
 {
-    //gCoordinator.AddEventListener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::WindowSizeListener));
     std::cout << "InputSystem init()" << std::endl;
 }
 
 /* Process all events on the event queue until it is empty.
  */
-//void InputSystem::processAllEvents(void)
 void processAllEvents(entt::registry* ecs)
 {
     //First, process the SDL event queue

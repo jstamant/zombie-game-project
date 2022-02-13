@@ -61,8 +61,6 @@ SDL_Texture* loadTexture(std::string path)
     }
     else
     {
-        //Apply color key to remove the magenta background
-        //SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xff, 0x00, 0xff));
         //Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
         if (newTexture == NULL)

@@ -10,7 +10,6 @@
 
 void RenderSystem::init()
 {
-    //gCoordinator.AddEventListener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::WindowSizeListener));
     std::cout << "RenderSystem init()" << std::endl;
 }
 
@@ -36,11 +35,10 @@ void renderAll(SDL_Renderer* renderer, entt::registry* ecs) {
         dest.y = p.y-r.sprite.offsetY;
         dest.w = r.sprite.rect.w;
         dest.h = r.sprite.rect.h;
-        //SDL_RenderCopy(renderer, renderable.sprite.spritesheet, &(renderable.sprite.rect), &dest);
         //Render entity's sprite to screen, with rotation around the sprite's center
         SDL_RenderCopyEx(gRenderer, r.sprite.spritesheet, &(r.sprite.rect), &dest, p.rotation, NULL, SDL_FLIP_NONE);
     }
-    
+
     //Push the current frame to the screen
     SDL_RenderPresent(gRenderer);
 }
