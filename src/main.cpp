@@ -75,7 +75,7 @@ int main(void)
         //All of the code here needs to be refactored.
         //It's only here while I add/test new code.
         {
-            entt::view view = registry.view<AI>();
+            auto view = registry.view<AI>();
             for (auto entity: view) {
                 {
                     //Seek player
@@ -93,7 +93,7 @@ int main(void)
                     source.y += move_y;
                 }
                 //Push away from other zombies
-                entt::view nestedview = registry.view<AI>();
+                auto nestedview = registry.view<AI>();
                 for (auto other: nestedview) {
                     if (entity != other) {
                         Position posOther = registry.get<Position>(other);
@@ -134,7 +134,7 @@ int main(void)
                 }
             }
             //Expire bullets
-            entt::view newview = registry.view<Bullet>();
+            auto newview = registry.view<Bullet>();
             for (entt::entity bullet: newview) {
                 Bullet& b = newview.get<Bullet>(bullet);
                 if (b.ttl-- <= 0)

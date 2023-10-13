@@ -19,14 +19,14 @@ void renderAll(SDL_Renderer* renderer, entt::registry* ecs) {
 
     //Render bullets
     {
-        entt::view view = ecs->view<Bullet>();
+        auto view = ecs->view<Bullet>();
         for (entt::entity bullet: view) {
             Bullet& b = view.get<Bullet>(bullet);
             b.draw(renderer);
         }
     }
     //Render all renderable entities
-    entt::view view = ecs->view<Renderable, Position>();
+    auto view = ecs->view<Renderable, Position>();
     for (entt::entity entity : view) {
         auto r = view.get<Renderable>(entity);
         auto p = view.get<Position>(entity);

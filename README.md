@@ -54,10 +54,14 @@ Here are some of the features I'd like to implement:
 You can get this to work on Windows if you have some IDE or compiler experience,
 but by far the easiest way to try this out is using `make` on Linux.
 
-I believe this game's only dependencies are [SDL2](https://www.libsdl.org/) and
-[EnTT](https://github.com/skypjack/entt). Before installation, make sure they're
-installed, then enter the following command in the same directory as the
-makefile:
+Here are the game's dependencies:
+
+* [SDL2](https://www.libsdl.org/)
+* [SDL_image](https://github.com/libsdl-org/SDL_image)
+* [EnTT](https://github.com/skypjack/entt) >= v3.12.0
+
+Before installation, make sure they're installed, then enter the following
+command in the same directory as the makefile:
 
 `$ make`
 

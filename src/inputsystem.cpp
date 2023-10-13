@@ -52,7 +52,7 @@ void processAllEvents(entt::registry* ecs)
     }
     //Then, process the movement keys
     const Uint8* keyboard = SDL_GetKeyboardState(NULL);
-    entt::view view = ecs->view<Controllable, Position>();
+    auto view = ecs->view<Controllable, Position>();
     for (entt::entity entity: view) {
         Position& p = view.get<Position>(entity);
         if (keyboard[SDL_SCANCODE_W])
