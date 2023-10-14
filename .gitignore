@@ -3,6 +3,9 @@
 *.out
 *.app
 
+# Build directory
+build
+
 # Compilation artifacts
 *.o
 *.d

@@ -51,23 +51,33 @@ Here are some of the features I'd like to implement:
 
 ## Installation
 
-You can get this to work on Windows if you have some IDE or compiler experience,
-but by far the easiest way to try this out is using `make` on Linux.
+As this project is still quite early in development, there are no binary
+releases. It must be built from source, using `cmake`.
 
-Here are the game's dependencies:
+First, install the game's dependencies:
 
 * [SDL2](https://www.libsdl.org/)
 * [SDL_image](https://github.com/libsdl-org/SDL_image)
 * [EnTT](https://github.com/skypjack/entt) >= v3.12.0
 
-Before installation, make sure they're installed, then enter the following
-command in the same directory as the makefile:
+Then, generate a makefile using `cmake` from the `build directory`:
 
-`$ make`
+```
+mkdir build
+cd build
+cmake ..
+```
 
-or to build and run the game:
+Finally, you can build the project and run the resulting binary (`sdl-app.out`)
+using the following commands:
 
-`$ make run`
+```
+make
+make run
+```
+
+Running `cmake` will generate the `compile_commands.json` file that your LSP
+needs for interpreting the project's translation units.
 
 ## Contributing
 
