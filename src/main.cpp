@@ -134,6 +134,7 @@ int main(void)
                 }
             }
             //Expire bullets
+            //TODO move ttl to private, once this is in an update function
             auto newview = registry.view<Bullet>();
             for (entt::entity bullet: newview) {
                 Bullet& b = newview.get<Bullet>(bullet);

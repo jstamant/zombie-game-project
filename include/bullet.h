@@ -7,15 +7,16 @@
 //Include dependencies
 #include <SDL2/SDL.h>
 
-// class Bullet: public Entity
 class Bullet
 {
 public:
+    Bullet(SDL_Point, SDL_Point);
+    void draw(SDL_Renderer *);
+    int ttl;
+private:
     SDL_Point source;
     SDL_Point target;
-    int ttl;
-    double angle;
-    void draw(SDL_Renderer*);
+    void extendLine(void);
 };
 
 #endif //_BULLET_H_

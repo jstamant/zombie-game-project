@@ -4,21 +4,18 @@
 
 //Include dependencies
 #include "bullet.h"
+#include "defines.h"
 #include <SDL2/SDL.h>
 
-// Bullet::Bullet(sf::Vector2f p1, sf::Vector2f p2):
-//     //TODO: need to figure out why I need to initialize this here...
-//     line(sf::Lines, 2) {
-//     time_to_live = BULLET_FLASH_DURATION;
-//     line[0].position = p1;
-//     line[1].position = p2;
-//     line[0].color = sf::Color::Yellow;
-//     line[1].color = sf::Color::Yellow;
-//     rect_ = line.getBounds();
-//     //notify(NEW_BULLET, id_);
-//     checked_collisions = false;
-//     extend_line();
-// }
+Bullet::Bullet(SDL_Point p1, SDL_Point p2) {
+  source.x = p1.x;
+  source.y = p1.y;
+  target.x = p2.x;
+  target.y = p2.y;
+  // TODO ttl should be moved to private
+  ttl = BULLET_FLASH_DURATION;
+  extendLine();
+}
 
 // //******************************************************************************
 // // Access functions
@@ -46,8 +43,7 @@
 //     }
 // }
 
-/* Override the default implementation from class Entity, in order to draw the
- * bullet's line by default. NOT ACCURATE DOCUMENTATION
+/* A custom draw interface for the bullet, as it doesn't use a sprite.
  */
 void Bullet::draw(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0x00, SDL_ALPHA_OPAQUE); //Yellow
@@ -98,23 +94,16 @@ void Bullet::draw(SDL_Renderer* renderer) {
 //     }
 // }
 
-// /* Extends or trims the bullet line to the global maximum bullet range.
-//  */
-// void Bullet::extend_line(void) {
-//     sf::Vector2f source = line[0].position;
-//     sf::Vector2f destination = line[1].position;
-//     float dx = destination.x - source.x;
-//     float dy = destination.y - source.y;
-//     float distance = sqrt(pow(dx,2) + pow(dy,2));
-//     float distance_ratio = BULLET_RANGE/distance;
-
-//     float new_dx = distance_ratio*dx;
-//     float new_dy = distance_ratio*dy;
-
-//     //Extend or trim the bullet line
-//     sf::Vector2f new_destination = line[0].position + sf::Vector2f(new_dx, new_dy);
-//     line[1].position = new_destination;
-// }
-
-// bool Bullet::is_bullet(void) { return true; }
-
+/* Extends or trims the bullet line to the global maximum bullet range. Not
+ * pure. This function mutates @target.
+ */
+void Bullet::extendLine(void) {
+    float dx = target.x - source.x;
+    float dy = target.y - source.y;
+    float distance = sqrt(pow(dx,2) + pow(dy,2));
+    float distance_ratio = BULLET_RANGE/distance;
+    float new_dx = distance_ratio*dx;
+    float new_dy = distance_ratio*dy;
+    target.x = source.x + new_dx;
+    target.y = source.y + new_dy;
+}

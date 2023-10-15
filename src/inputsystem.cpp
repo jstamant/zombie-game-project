@@ -34,18 +34,18 @@ void processAllEvents(entt::registry* ecs)
         //User presses left-click
         if (gEventQueue.type == SDL_MOUSEBUTTONDOWN) {
             if (gEventQueue.button.button == SDL_BUTTON_LEFT) {
-                entt::entity bullet = ecs->create();
-                Bullet& b = ecs->emplace<Bullet>(bullet);
-                entt::entity player = ecs->view<Controllable>().front();
-                //Make sure the player is actually alive, or seg fault will happen, since view<Controllable> will return empty when the player has its control removed
-                if (ecs->valid(player)) {
-                    Position& p = ecs->get<Position>(player);
-                    b.source.x = p.x;
-                    b.source.y = p.y;
-                    b.target.x = gEventQueue.button.x;
-                    b.target.y = gEventQueue.button.y;
-                    b.ttl = 5;
-                    std::cout << "SHOOT!" << std::endl;
+                // Make sure the player is actually alive, or seg fault will
+                // happen, since view<Controllable> will return empty when the
+                // player has its control removed
+                entt::entity playerID = ecs->view<Controllable>().front();
+                if (ecs->valid(playerID)) {
+                  std::cout << "SHOOT!" << std::endl;
+                  Position &playerPos = ecs->get<Position>(playerID);
+                  SDL_Point source = {(int)playerPos.x, (int)playerPos.y};
+                  SDL_Point target = {gEventQueue.button.x,
+                                      gEventQueue.button.y};
+                  entt::entity bulletID = ecs->create();
+                  Bullet &bullet = ecs->emplace<Bullet>(bulletID, source, target);
                 }
             }
         }
