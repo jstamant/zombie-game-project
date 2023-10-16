@@ -9,7 +9,8 @@
 class EntityManager
 {
 public:
-    EntityManager(entt::registry*);
+    EntityManager(entt::registry *);
+    void createBullet(void);
     entt::entity createPlayer(void);
     entt::entity createZombie(entt::entity);
 private:

@@ -2,6 +2,7 @@
 #include "controllable.h"
 #include "defines.h"
 #include <entt/entt.hpp>
+#include "entitymanager.h"
 #include "globals.h"
 #include "inputsystem.h"
 #include <SDL2/SDL.h>
@@ -17,7 +18,7 @@ void InputSystem::init()
 
 /* Process all events on the event queue until it is empty.
  */
-void processAllEvents(entt::registry* ecs)
+void processAllEvents(entt::registry* ecs, EntityManager* em)
 {
     //First, process the SDL event queue
     while (SDL_PollEvent(&gEventQueue) != 0)
@@ -34,19 +35,7 @@ void processAllEvents(entt::registry* ecs)
         //User presses left-click
         if (gEventQueue.type == SDL_MOUSEBUTTONDOWN) {
             if (gEventQueue.button.button == SDL_BUTTON_LEFT) {
-                // Make sure the player is actually alive, or seg fault will
-                // happen, since view<Controllable> will return empty when the
-                // player has its control removed
-                entt::entity playerID = ecs->view<Controllable>().front();
-                if (ecs->valid(playerID)) {
-                  std::cout << "SHOOT!" << std::endl;
-                  Position &playerPos = ecs->get<Position>(playerID);
-                  SDL_Point source = {(int)playerPos.x, (int)playerPos.y};
-                  SDL_Point target = {gEventQueue.button.x,
-                                      gEventQueue.button.y};
-                  entt::entity bulletID = ecs->create();
-                  Bullet &bullet = ecs->emplace<Bullet>(bulletID, source, target);
-                }
+                em->createBullet();
             }
         }
     }

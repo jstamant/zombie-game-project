@@ -2,6 +2,7 @@
 #define _INPUTSYSTEM_H_
 
 #include <entt/entt.hpp>
+#include "entitymanager.h"
 
 class InputSystem
 {
@@ -11,6 +12,6 @@ public:
 private:
 };
 
-void processAllEvents(entt::registry*);
+void processAllEvents(entt::registry*, EntityManager*);
 
 #endif //_INPUTSYSTEM_H_

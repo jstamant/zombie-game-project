@@ -63,7 +63,7 @@ int main(void)
     while (gGame.running)
     {
         //Process input and/or events
-        processAllEvents(&registry);
+        processAllEvents(&registry, &entitymanager);
 
         //FOR TESTING
         if (enemy_spawn++ >= 100) {
