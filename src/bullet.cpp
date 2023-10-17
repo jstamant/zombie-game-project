@@ -7,14 +7,11 @@
 #include "defines.h"
 #include <SDL2/SDL.h>
 
-Bullet::Bullet(SDL_Point p1, SDL_Point p2) {
-  source.x = p1.x;
-  source.y = p1.y;
-  target.x = p2.x;
-  target.y = p2.y;
+Bullet::Bullet(SDL_Point point) {
+  target.x = point.x;
+  target.y = point.y;
   // TODO ttl should be moved to private
   ttl = BULLET_FLASH_DURATION;
-  extendLine();
 }
 
 // //******************************************************************************
@@ -42,13 +39,6 @@ Bullet::Bullet(SDL_Point p1, SDL_Point p2) {
 //         entitymanager_->del_entity(id_);
 //     }
 // }
-
-/* A custom draw interface for the bullet, as it doesn't use a sprite.
- */
-void Bullet::draw(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0x00, SDL_ALPHA_OPAQUE); //Yellow
-    SDL_RenderDrawLine(renderer, source.x, source.y, target.x, target.y);
-}
 
 // /* Gets the entity manager to provide a list of potential collisions.
 //  */
@@ -93,17 +83,3 @@ void Bullet::draw(SDL_Renderer* renderer) {
 //         check_y += step_y;
 //     }
 // }
-
-/* Extends or trims the bullet line to the global maximum bullet range. Not
- * pure. This function mutates @target.
- */
-void Bullet::extendLine(void) {
-    float dx = target.x - source.x;
-    float dy = target.y - source.y;
-    float distance = sqrt(pow(dx,2) + pow(dy,2));
-    float distance_ratio = BULLET_RANGE/distance;
-    float new_dx = distance_ratio*dx;
-    float new_dy = distance_ratio*dy;
-    target.x = source.x + new_dx;
-    target.y = source.y + new_dy;
-}

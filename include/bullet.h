@@ -10,13 +10,9 @@
 class Bullet
 {
 public:
-    Bullet(SDL_Point, SDL_Point);
-    void draw(SDL_Renderer *);
-    int ttl;
-private:
-    SDL_Point source;
+    Bullet(SDL_Point);
     SDL_Point target;
-    void extendLine(void);
+    int ttl;
 };
 
 #endif //_BULLET_H_

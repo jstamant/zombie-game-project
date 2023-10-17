@@ -3,6 +3,9 @@
 
 #include <SDL2/SDL.h>
 
+// TODO this isn't very efficient. All this data is getting copied for each
+// entity, other than the spritesheet.
+
 class Sprite
 {
 public:

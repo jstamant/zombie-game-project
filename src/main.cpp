@@ -23,6 +23,7 @@
 #include "inputsystem.h"
 #include "renderable.h"
 #include "rendersystem.h"
+#include "sprite.h"
 #include "position.h"
 
 //FOR TESTING
@@ -127,8 +128,8 @@ int main(void)
                                 registry.remove<Controllable>(player);
                                 std::cout << "REMOVED" << std::endl;
                             }
-                            Renderable& r = registry.get<Renderable>(player);
-                            r.sprite.rect.x = 64;
+                            Sprite& sprite = registry.get<Sprite>(player);
+                            sprite.rect.x = 64;
                         }
                     }
                 }
