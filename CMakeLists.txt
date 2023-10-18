@@ -17,6 +17,7 @@ set(SOURCES
   src/game.cpp
   src/inputsystem.cpp
   src/main.cpp
+  src/physics.cpp
   src/rendersystem.cpp
   src/sprite.cpp)
 
