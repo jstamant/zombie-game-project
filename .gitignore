@@ -20,3 +20,6 @@ build
 # CodeBlocks IDE files
 *.layout
 *.depend
+
+# Transient files
+*.cache
