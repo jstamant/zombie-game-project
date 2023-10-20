@@ -16,17 +16,17 @@
 #include <iostream>
 
 Physics::Physics(entt::registry* registry) {
-  ecs = registry;
+  ecs_ = registry;
 }
 
 void Physics::evaluate(void) {
-  auto view = ecs->view<AI>();
+  auto view = ecs_->view<AI>();
   for (auto entity : view) {
     {
       // Seek player
       entt::entity target = view.get<AI>(entity).target;
-      Position destination = ecs->get<Position>(target);
-      Position &source = ecs->get<Position>(entity);
+      Position destination = ecs_->get<Position>(target);
+      Position &source = ecs_->get<Position>(entity);
       float dx = destination.x - source.x;
       float dy = destination.y - source.y;
       double raw_angle = atan2(dy, dx);
@@ -38,11 +38,11 @@ void Physics::evaluate(void) {
       source.y += move_y;
     }
     // Push away from other zombies
-    auto nestedview = ecs->view<AI>();
+    auto nestedview = ecs_->view<AI>();
     for (auto other : nestedview) {
       if (entity != other) {
-        Position posOther = ecs->get<Position>(other);
-        Position &posSelf = ecs->get<Position>(entity);
+        Position posOther = ecs_->get<Position>(other);
+        Position &posSelf = ecs_->get<Position>(entity);
         float dx = posOther.x - posSelf.x;
         float dy = posOther.y - posSelf.y;
         double distance = sqrt(pow(dx, 2) + pow(dy, 2));
@@ -55,11 +55,11 @@ void Physics::evaluate(void) {
       }
     }
     // Push away from the player
-    entt::entity player = ecs->view<Controllable>().front();
-    if (ecs->valid(player)) {
+    entt::entity player = ecs_->view<Controllable>().front();
+    if (ecs_->valid(player)) {
       if (entity != player) {
-        Position posOther = ecs->get<Position>(player);
-        Position &posSelf = ecs->get<Position>(entity);
+        Position posOther = ecs_->get<Position>(player);
+        Position &posSelf = ecs_->get<Position>(entity);
         float dx = posOther.x - posSelf.x;
         float dy = posOther.y - posSelf.y;
         double distance = sqrt(pow(dx, 2) + pow(dy, 2));
@@ -69,14 +69,14 @@ void Physics::evaluate(void) {
           posSelf.x += 0.6 * cos(angle);
           posSelf.y += 0.6 * sin(angle);
           // And inflict damage to the player
-          Health &health = ecs->get<Health>(player);
+          Health &health = ecs_->get<Health>(player);
           health.health -= 1;
           if (health.health <= 0) {
-            if (ecs->all_of<Controllable>(player)) {
-              ecs->remove<Controllable>(player);
+            if (ecs_->all_of<Controllable>(player)) {
+              ecs_->remove<Controllable>(player);
               std::cout << "REMOVED" << std::endl;
             }
-            Sprite &sprite = ecs->get<Sprite>(player);
+            Sprite &sprite = ecs_->get<Sprite>(player);
             sprite.rect.x = 64;
           }
         }
@@ -85,10 +85,35 @@ void Physics::evaluate(void) {
   }
   // Expire bullets
   // TODO move ttl to private, once this is in an update function
-  auto newview = ecs->view<Bullet>();
+  auto newview = ecs_->view<Bullet>();
   for (entt::entity bullet : newview) {
     Bullet &b = newview.get<Bullet>(bullet);
     if (b.ttl-- <= 0)
-      ecs->destroy(bullet);
+      ecs_->destroy(bullet);
+  }
+
+}
+
+void Physics::swap(void) {
+  //TODO swap all positions with the next position
+  auto view = ecs_->view<Position>();
+  for (entt::entity entity : view) {
+    //TODO can move this to the entitymanager to manage the swap
+    Position& p = view.get<Position>(entity);
+    p.swap();
+  }
+}
+
+void Physics::onNotify(entt::entity entity, Event event) {
+  std::cout << "Physics manager notified!" << std::endl;
+  switch (event) {
+  case BULLET_FIRED:
+    std::cout << "TODO - calculating bullet trajectory" << std::endl;
+    break;
+  case ENEMY_CREATED:
+    std::cout << "New enemy!" << std::endl;
+    break;
+  default:
+    std::cout << "No recognizable event found" << std::endl;
   }
 }

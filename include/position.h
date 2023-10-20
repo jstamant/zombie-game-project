@@ -3,10 +3,17 @@
 
 /* Component for entities that defines an x and y coordinate, and a rotation.
  */
-struct Position
+class Position
 {
+ public:
     float x, y;
     double rotation;
+    struct Next {
+      float x;
+      float y;
+      double rotation;
+    } next;
+    void swap(void);
 };
 
 #endif //_POSITION_H_

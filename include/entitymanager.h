@@ -5,8 +5,9 @@
 //************************************************
 
 #include <entt/entt.hpp>
+#include "subject.h"
 
-class EntityManager
+class EntityManager : public Subject
 {
 public:
     EntityManager(entt::registry *);

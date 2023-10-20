@@ -17,9 +17,12 @@ set(SOURCES
   src/game.cpp
   src/inputsystem.cpp
   src/main.cpp
+  src/observer.cpp
   src/physics.cpp
+  src/position.cpp
   src/rendersystem.cpp
-  src/sprite.cpp)
+  src/sprite.cpp
+  src/subject.cpp)
 
 add_executable(sdl-app.out ${SOURCES})
 

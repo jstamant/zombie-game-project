@@ -31,7 +31,6 @@ void EntityManager::createBullet(void) {
   // player has its control removed
   entt::entity player = registry_->view<Controllable>().front();
   if (registry_->valid(player)) {
-    std::cout << "SHOOT!" << std::endl;
     entt::entity entity = registry_->create();
     registry_->emplace<Renderable>(entity);
     Position &p = registry_->emplace<Position>(entity);
@@ -40,33 +39,38 @@ void EntityManager::createBullet(void) {
     p.y = (int)playerPos.y;
     SDL_Point target = {gEventQueue.button.x, gEventQueue.button.y};
     p.rotation = atan2(target.y - p.y, target.x - p.x);
+    std::cout << "before emplace bullet" << std::endl;
     registry_->emplace<Bullet>(entity, target);
+    std::cout << "after emplace bullet" << std::endl;
+
+    notify(entity, BULLET_FIRED);
   }
 }
 
 entt::entity EntityManager::createPlayer(void) {
-    entt::entity player = registry_->create();
-    registry_->emplace<Renderable>(player);
-    registry_->emplace<Sprite>(player);
-    Position& p = registry_->emplace<Position>(player);
-    p.x = WINDOW_WIDTH/2;
-    p.y = WINDOW_HEIGHT/2;
-    Controllable& c = registry_->emplace<Controllable>(player);
-    c.state = true;
-    registry_->emplace<Health>(player);
-    return player;
+  entt::entity player = registry_->create();
+  registry_->emplace<Renderable>(player);
+  registry_->emplace<Sprite>(player);
+  Position &p = registry_->emplace<Position>(player);
+  p.x = WINDOW_WIDTH / 2;
+  p.y = WINDOW_HEIGHT / 2;
+  Controllable &c = registry_->emplace<Controllable>(player);
+  c.state = true;
+  registry_->emplace<Health>(player);
+  return player;
 }
 
 entt::entity EntityManager::createZombie(entt::entity target) {
-    entt::entity zombie = registry_->create();
-    registry_->emplace<Renderable>(zombie);
-    Sprite& sprite = registry_->emplace<Sprite>(zombie);
-    sprite.setRow(1);
-    Position& p = registry_->emplace<Position>(zombie);
-    p.x = WINDOW_WIDTH+100;
-    p.y = rand()%WINDOW_HEIGHT;
-    AI& ai =registry_->emplace<AI>(zombie);
-    ai.target = target;
-    registry_->emplace<Health>(zombie);
-    return zombie;
+  entt::entity zombie = registry_->create();
+  registry_->emplace<Renderable>(zombie);
+  Sprite &sprite = registry_->emplace<Sprite>(zombie);
+  sprite.setRow(1);
+  Position &p = registry_->emplace<Position>(zombie);
+  p.x = WINDOW_WIDTH + 100;
+  p.y = rand() % WINDOW_HEIGHT;
+  AI &ai = registry_->emplace<AI>(zombie);
+  ai.target = target;
+  registry_->emplace<Health>(zombie);
+  notify(zombie, ENEMY_CREATED);
+  return zombie;
 }

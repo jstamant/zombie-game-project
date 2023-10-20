@@ -11,18 +11,17 @@
 #define BULLET_FLASH_DURATION 5
 #define BULLET_RANGE 1000
 
-/* Not really used since refactoring from SFML to SDL.
- */
 enum Event
 {
-    SHOOT,
-    MOVE_UP,
-    MOVE_DOWN,
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    NEW_BULLET,
-    NEW_ENTITY,
-    KILL_ENTITY
+  BULLET_FIRED,
+  ENEMY_CREATED
+    /* MOVE_UP, */
+    /* MOVE_DOWN, */
+    /* MOVE_LEFT, */
+    /* MOVE_RIGHT, */
+    /* NEW_BULLET, */
+    /* NEW_ENTITY, */
+    /* KILL_ENTITY */
 };
 
 /* List of entities sorted by their row on the spritesheet.

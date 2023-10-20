@@ -51,6 +51,7 @@ int main(void)
 
     //Initialize some system(s)
     Physics physics(&registry);
+    entitymanager.addObserver(&physics);
 
     entt::entity player = entitymanager.createPlayer();
 
@@ -74,8 +75,11 @@ int main(void)
         //Perform game logic
         physics.evaluate();
 
-        //Perform rendering
+        // Perform rendering
         renderAll(gRenderer, &registry);
+
+        // Update positions
+        // physics.swap();
     }
     //Free resources and close SDL
     close();
