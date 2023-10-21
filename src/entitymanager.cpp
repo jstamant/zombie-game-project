@@ -53,7 +53,9 @@ entt::entity EntityManager::createPlayer(void) {
   registry_->emplace<Sprite>(player);
   Position &p = registry_->emplace<Position>(player);
   p.x = WINDOW_WIDTH / 2;
+  p.next.x = p.x;
   p.y = WINDOW_HEIGHT / 2;
+  p.next.y = p.y;
   Controllable &c = registry_->emplace<Controllable>(player);
   c.state = true;
   registry_->emplace<Health>(player);
@@ -67,7 +69,9 @@ entt::entity EntityManager::createZombie(entt::entity target) {
   sprite.setRow(1);
   Position &p = registry_->emplace<Position>(zombie);
   p.x = WINDOW_WIDTH + 100;
+  p.next.x = p.x;
   p.y = rand() % WINDOW_HEIGHT;
+  p.next.y = p.y;
   AI &ai = registry_->emplace<AI>(zombie);
   ai.target = target;
   registry_->emplace<Health>(zombie);

@@ -20,6 +20,7 @@ Physics::Physics(entt::registry* registry) {
 }
 
 void Physics::evaluate(void) {
+  // TODO these need to be velocity vectors that operate on the position at the END.
   auto view = ecs_->view<AI>();
   for (auto entity : view) {
     {
@@ -32,10 +33,10 @@ void Physics::evaluate(void) {
       double raw_angle = atan2(dy, dx);
       float move_x = Z_SPEED * cos(raw_angle);
       float move_y = Z_SPEED * sin(raw_angle);
-      source.rotation = raw_angle * 180 / M_PI;
+      source.next.rotation = raw_angle * 180 / M_PI;
       // Perform movement
-      source.x += move_x;
-      source.y += move_y;
+      source.next.x += move_x;
+      source.next.y += move_y;
     }
     // Push away from other zombies
     auto nestedview = ecs_->view<AI>();
@@ -49,8 +50,8 @@ void Physics::evaluate(void) {
         if (distance < 24) {
           double angle =
               atan2(dy, dx) + M_PI; // Angle pointing away from the other zombie
-          posSelf.x += 0.8 * cos(angle);
-          posSelf.y += 0.8 * sin(angle);
+          posSelf.next.x += 0.8 * cos(angle);
+          posSelf.next.y += 0.8 * sin(angle);
         }
       }
     }
@@ -66,8 +67,8 @@ void Physics::evaluate(void) {
         if (distance < 32) {
           double angle =
               atan2(dy, dx) + M_PI; // Angle pointing away from the other zombie
-          posSelf.x += 0.6 * cos(angle);
-          posSelf.y += 0.6 * sin(angle);
+          posSelf.next.x += 0.6 * cos(angle);
+          posSelf.next.y += 0.6 * sin(angle);
           // And inflict damage to the player
           Health &health = ecs_->get<Health>(player);
           health.health -= 1;

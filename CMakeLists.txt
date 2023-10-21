@@ -17,7 +17,6 @@ set(SOURCES
   src/game.cpp
   src/inputsystem.cpp
   src/main.cpp
-  src/observer.cpp
   src/physics.cpp
   src/position.cpp
   src/rendersystem.cpp

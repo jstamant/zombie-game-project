@@ -79,7 +79,7 @@ int main(void)
         renderAll(gRenderer, &registry);
 
         // Update positions
-        // physics.swap();
+        physics.swap();
     }
     //Free resources and close SDL
     close();
