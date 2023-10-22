@@ -1,19 +1,13 @@
 #ifndef _POSITION_H_
 #define _POSITION_H_
 
-/* Component for entities that defines an x and y coordinate, and a rotation.
+/* Component for entities that defines an x and y coordinate, and a rotation (in
+   radians).
  */
-class Position
+struct Position
 {
- public:
-    float x, y;
-    double rotation;
-    struct Next {
-      float x;
-      float y;
-      double rotation;
-    } next;
-    void swap(void);
+  float x, y;
+  double rotation;
 };
 
 #endif //_POSITION_H_

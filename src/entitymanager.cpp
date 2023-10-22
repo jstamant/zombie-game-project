@@ -16,6 +16,7 @@
 #include "position.h"
 #include "renderable.h"
 #include "sprite.h"
+#include "velocity.h"
 
 // DEBUG
 #include <iostream>
@@ -39,10 +40,7 @@ void EntityManager::createBullet(void) {
     p.y = (int)playerPos.y;
     SDL_Point target = {gEventQueue.button.x, gEventQueue.button.y};
     p.rotation = atan2(target.y - p.y, target.x - p.x);
-    std::cout << "before emplace bullet" << std::endl;
     registry_->emplace<Bullet>(entity, target);
-    std::cout << "after emplace bullet" << std::endl;
-
     notify(entity, BULLET_FIRED);
   }
 }
@@ -50,14 +48,10 @@ void EntityManager::createBullet(void) {
 entt::entity EntityManager::createPlayer(void) {
   entt::entity player = registry_->create();
   registry_->emplace<Renderable>(player);
+  registry_->emplace<Velocity>(player);
   registry_->emplace<Sprite>(player);
-  Position &p = registry_->emplace<Position>(player);
-  p.x = WINDOW_WIDTH / 2;
-  p.next.x = p.x;
-  p.y = WINDOW_HEIGHT / 2;
-  p.next.y = p.y;
-  Controllable &c = registry_->emplace<Controllable>(player);
-  c.state = true;
+  registry_->emplace<Position>(player, WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 0);
+  registry_->emplace<Controllable>(player, true);
   registry_->emplace<Health>(player);
   return player;
 }
@@ -65,16 +59,11 @@ entt::entity EntityManager::createPlayer(void) {
 entt::entity EntityManager::createZombie(entt::entity target) {
   entt::entity zombie = registry_->create();
   registry_->emplace<Renderable>(zombie);
-  Sprite &sprite = registry_->emplace<Sprite>(zombie);
-  sprite.setRow(1);
-  Position &p = registry_->emplace<Position>(zombie);
-  p.x = WINDOW_WIDTH + 100;
-  p.next.x = p.x;
-  p.y = rand() % WINDOW_HEIGHT;
-  p.next.y = p.y;
-  AI &ai = registry_->emplace<AI>(zombie);
-  ai.target = target;
+  registry_->emplace<Velocity>(zombie);
+  registry_->emplace<Sprite>(zombie).setRow(1);
+  registry_->emplace<Position>(zombie, WINDOW_WIDTH + 100,
+                               rand() % WINDOW_HEIGHT);
+  registry_->emplace<AI>(zombie).target = target;
   registry_->emplace<Health>(zombie);
-  notify(zombie, ENEMY_CREATED);
   return zombie;
 }

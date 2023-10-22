@@ -18,10 +18,10 @@ set(SOURCES
   src/inputsystem.cpp
   src/main.cpp
   src/physics.cpp
-  src/position.cpp
   src/rendersystem.cpp
   src/sprite.cpp
-  src/subject.cpp)
+  src/subject.cpp
+  src/velocity.cpp)
 
 add_executable(sdl-app.out ${SOURCES})
 

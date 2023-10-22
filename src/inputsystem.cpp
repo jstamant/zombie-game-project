@@ -1,12 +1,14 @@
+#include <SDL2/SDL.h>
+#include <entt/entt.hpp>
+
 #include "bullet.h"
 #include "controllable.h"
 #include "defines.h"
-#include <entt/entt.hpp>
 #include "entitymanager.h"
 #include "globals.h"
 #include "inputsystem.h"
-#include <SDL2/SDL.h>
 #include "position.h"
+#include "velocity.h"
 
 //DEBUG
 #include <iostream>
@@ -41,23 +43,22 @@ void processAllEvents(entt::registry* ecs, EntityManager* em)
     }
     //Then, process the movement keys
     const Uint8* keyboard = SDL_GetKeyboardState(NULL);
-    auto view = ecs->view<Controllable, Position>();
+    auto view = ecs->view<Controllable, Velocity, Position>();
     for (entt::entity entity: view) {
-        Position& p = view.get<Position>(entity);
+        Velocity& v = view.get<Velocity>(entity);
         if (keyboard[SDL_SCANCODE_W])
-            p.next.y -= SPEED;
+          v.add_components(0, -SPEED);
         if (keyboard[SDL_SCANCODE_A])
-            p.next.x -= SPEED;
+          v.add_components(-SPEED, 0);
         if (keyboard[SDL_SCANCODE_S])
-            p.next.y += SPEED;
+          v.add_components(0, SPEED);
         if (keyboard[SDL_SCANCODE_D])
-            p.next.x += SPEED;
-        //Rotates the entity (character) to face the mouse pointer.
-        SDL_Point mouse_position;
-        SDL_GetMouseState(&mouse_position.x, &mouse_position.y);
-        SDL_Point angle_vector;
-        angle_vector.x = mouse_position.x - p.next.x;
-        angle_vector.y = mouse_position.y - p.next.y;
-        p.next.rotation = atan2(angle_vector.y, angle_vector.x) * 180 / M_PI;
+          v.add_components(SPEED, 0);
+        // Rotates the entity (character) to face the mouse pointer.
+        SDL_Point mouse;
+        SDL_GetMouseState(&mouse.x, &mouse.y);
+        ecs->patch<Position>(entity, [&mouse](auto &p) {
+          p.rotation = atan2(mouse.y - p.y, mouse.x - p.x);
+        });
     }
 }

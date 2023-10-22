@@ -11,18 +11,21 @@
 #include <time.h>
 
 //Include dependencies
+#include <entt/entt.hpp>
+
 #include "ai.h"
 #include "defines.h"
 #include "entitymanager.h"
-#include <entt/entt.hpp>
 #include "functions.h"
 #include "game.h"
 #include "inputsystem.h"
 #include "physics.h"
 #include "renderable.h"
 #include "rendersystem.h"
+#include "velocity.h"
 
-//FOR TESTING
+// FOR TESTING
+#include <cmath>
 #include <iostream>
 
 //Make these variables global for now...
@@ -39,51 +42,60 @@ SDL_Surface* loadSurface(std::string);
 
 int main(void)
 {
-    //TESTING STUFF TO INITIALIZE FOR TESTING
-    entt::registry registry;
-    EntityManager entitymanager(&registry);
-    int enemy_spawn = 0;
-    srand(time(NULL));
 
-    //Start up SDL and create the window
-    if (!initializeSDL())
-        printf( "Failed to initialize SDL!\n" );
+  Velocity vel;
+  std::cout << "x: " << vel.get_x() << std::endl;
+  std::cout << "y: " << vel.get_y() << std::endl;
+  vel.add(2, M_PI_2);
+  std::cout << "x: " << vel.get_x() << std::endl;
+  std::cout << "y: " << vel.get_y() << std::endl;
+  vel.add(4, -M_PI_2);
+  std::cout << "x: " << vel.get_x() << std::endl;
+  std::cout << "y: " << vel.get_y() << std::endl;
 
-    //Initialize some system(s)
-    Physics physics(&registry);
-    entitymanager.addObserver(&physics);
+  // TESTING STUFF TO INITIALIZE FOR TESTING
+  entt::registry registry;
+  EntityManager entitymanager(&registry);
+  int enemy_spawn = 0;
+  srand(time(NULL));
 
-    entt::entity player = entitymanager.createPlayer();
+  // Start up SDL and create the window
+  if (!initializeSDL())
+    printf("Failed to initialize SDL!\n");
 
-    //FOR TESTING, add some zombies
-    for (int i=0; i<100; i++)
-        entitymanager.createZombie(player);
+  // Initialize some system(s)
+  Physics physics(&registry);
+  entitymanager.addObserver(&physics);
 
-    //While game is running; main game loop
-    gGame.running = true;
-    while (gGame.running)
-    {
-        //Process input and/or events
-        processAllEvents(&registry, &entitymanager);
+  entt::entity player = entitymanager.createPlayer();
 
-        //FOR TESTING
-        if (enemy_spawn++ >= 100) {
-            entitymanager.createZombie(player);
-            enemy_spawn = 0;
-        }
+  // FOR TESTING, add some zombies
+  for (int i = 0; i < 100; i++)
+    entitymanager.createZombie(player);
 
-        //Perform game logic
-        physics.evaluate();
+  // While game is running; main game loop
+  gGame.running = true;
+  while (gGame.running) {
+    // Process input and/or events
+    processAllEvents(&registry, &entitymanager);
 
-        // Perform rendering
-        renderAll(gRenderer, &registry);
-
-        // Update positions
-        physics.swap();
+    // FOR TESTING
+    if (enemy_spawn++ >= 100) {
+      entitymanager.createZombie(player);
+      enemy_spawn = 0;
     }
-    //Free resources and close SDL
-    close();
-    return 0;
+
+    // Perform game logic
+    physics.evaluate();
+    // Update positions
+    physics.apply_velocities();
+
+    // Perform rendering
+    renderAll(gRenderer, &registry);
+  }
+  //Free resources and close SDL
+  close();
+  return 0;
 }
 
 void close(void)

@@ -9,7 +9,7 @@ class Physics : public Observer
 public:
   Physics(entt::registry*);
   void evaluate(void);
-  void swap(void);
+  void apply_velocities(void);
   virtual void onNotify(entt::entity, Event);
 private:
   entt::registry* ecs_;
