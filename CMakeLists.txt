@@ -11,7 +11,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
 set(SOURCES
-  src/bullet.cpp
   src/entitymanager.cpp
   src/functions.cpp
   src/game.cpp

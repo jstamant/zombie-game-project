@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <entt/entt.hpp>
 
-#include "bullet.h"
 #include "controllable.h"
 #include "defines.h"
 #include "entitymanager.h"

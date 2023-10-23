@@ -2,8 +2,6 @@
 #define _RENDERABLE_H_
 
 // Component for entities that can be drawn to the screen
-struct Renderable
-{
-};
+typedef bool Renderable;
 
 #endif //_RENDERABLE_H_

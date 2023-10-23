@@ -10,12 +10,13 @@
 
 //Include component header files
 #include "ai.h"
-#include "bullet.h"
 #include "controllable.h"
 #include "health.h"
+#include "line.h"
 #include "position.h"
 #include "renderable.h"
 #include "sprite.h"
+#include "ttl.h"
 #include "velocity.h"
 
 // DEBUG
@@ -32,16 +33,17 @@ void EntityManager::createBullet(void) {
   // player has its control removed
   entt::entity player = registry_->view<Controllable>().front();
   if (registry_->valid(player)) {
-    entt::entity entity = registry_->create();
-    registry_->emplace<Renderable>(entity);
-    Position &p = registry_->emplace<Position>(entity);
+    entt::entity bullet = registry_->create();
+    registry_->emplace<Renderable>(bullet);
+    Position &p = registry_->emplace<Position>(bullet);
     Position &playerPos = registry_->get<Position>(player);
     p.x = (int)playerPos.x;
     p.y = (int)playerPos.y;
     SDL_Point target = {gEventQueue.button.x, gEventQueue.button.y};
     p.rotation = atan2(target.y - p.y, target.x - p.x);
-    registry_->emplace<Bullet>(entity, target);
-    notify(entity, BULLET_FIRED);
+    registry_->emplace<Line>(bullet, p.x, p.y, target.x, target.y);
+    registry_->emplace<TTL>(bullet, BULLET_FLASH_DURATION);
+    notify(bullet, BULLET_FIRED);
   }
 }
 

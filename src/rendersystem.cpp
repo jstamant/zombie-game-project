@@ -1,9 +1,9 @@
 #include <cmath>
 #include <SDL2/SDL.h>
 
-#include "bullet.h"
 #include "defines.h"
 #include "globals.h"
+#include "line.h"
 #include "renderable.h"
 #include "rendersystem.h"
 #include "sprite.h"
@@ -24,15 +24,11 @@ void renderAll(SDL_Renderer* renderer, entt::registry* ecs) {
 
     // Render all bullets
     {
-        auto view = ecs->view<Renderable, Position, Bullet>();
-        for (entt::entity entity : view) {
-            Bullet& b = view.get<Bullet>(entity);
-            Position& p = view.get<Position>(entity);
-            //TODO move this calculation out of the render loop!
-            float dx = BULLET_RANGE * cos(p.rotation);
-            float dy = BULLET_RANGE * sin(p.rotation);
-            SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0x00, SDL_ALPHA_OPAQUE); // Yellow
-            SDL_RenderDrawLine(renderer, p.x, p.y, p.x + dx, p.y + dy);
+        auto view = ecs->view<Line>();
+        for (entt::entity bullet : view) {
+          Line &l = ecs->get<Line>(bullet);
+          SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0x00, SDL_ALPHA_OPAQUE); // Yellow
+          SDL_RenderDrawLine(renderer, l.x1, l.y1, l.x2, l.y2);
         }
     }
     // Render all entities with sprites

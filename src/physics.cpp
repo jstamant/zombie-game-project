@@ -2,15 +2,19 @@
 // physics.cpp
 //******************************************************************************
 
+#include <cmath>
+#include <SDL2/SDL.h>
+#include <entt/entt.hpp>
+
 #include "ai.h"
-#include "bullet.h"
 #include "controllable.h"
 #include "defines.h"
 #include "health.h"
-#include <entt/entt.hpp>
+#include "line.h"
 #include "physics.h"
 #include "position.h"
 #include "sprite.h"
+#include "ttl.h"
 #include "velocity.h"
 
 // DEBUG
@@ -87,12 +91,13 @@ void Physics::evaluate(void) {
   }
 
   // Expire bullets
-  // TODO move ttl to private, once this is in an update function
-  auto newview = ecs_->view<Bullet>();
-  for (entt::entity bullet : newview) {
-    Bullet &b = newview.get<Bullet>(bullet);
-    if (b.ttl-- <= 0)
-      ecs_->destroy(bullet);
+  {
+    auto view = ecs_->view<TTL>();
+    for (entt::entity entity : view) {
+      TTL &ttl = view.get<TTL>(entity);
+      if (ttl-- <= 0)
+        ecs_->destroy(entity);
+    }
   }
 }
 
@@ -112,13 +117,49 @@ void Physics::apply_velocities(void) {
 void Physics::onNotify(entt::entity entity, Event event) {
   std::cout << "Physics manager notified!" << std::endl;
   switch (event) {
-  case BULLET_FIRED:
+  case BULLET_FIRED: {
     std::cout << "TODO - calculating bullet trajectory" << std::endl;
+    std::cout << "Just travelling max distance" << std::endl;
+    Line &l = ecs_->get<Line>(entity);
+    double angle = atan2(l.y2 - l.y1, l.x2 - l.x1);
+    double dist = (l.x2 - l.x1) / cos(angle);
+    if (dist < BULLET_RANGE) {
+      l.x2 = l.x1 + BULLET_RANGE * cos(angle);
+      l.y2 = l.y1 + BULLET_RANGE * sin(angle);
+    }
+    // Bullet &bullet = ecs_->get<Bullet>(entity);
+    // Position &p = ecs_->get<Position>(entity);
+    // SDL_Rect bullet_bounds;
+    // bullet_bounds.x = p.x;
+    // bullet_bounds.y = p.y;
+    // bullet_bounds.w = bullet.target.x - p.x;
+    // bullet_bounds.h = bullet.target.y - p.y;
+    // std::cout << bullet_bounds.x << std::endl;
+    // std::cout << bullet_bounds.y << std::endl;
+    // std::cout << bullet_bounds.w << std::endl;
+    // std::cout << bullet_bounds.h << std::endl;
+    // auto view = ecs_->view<AI>();
+    // for (entt::entity zombie : view) {
+    //   Sprite sprite = ecs_->get<Sprite>(zombie);
+    //   if (calc_collision(bullet_bounds, sprite.rect)) {
+    //     // std::cout << "potential collission" << std::endl;
+    //   }
+    // }
     break;
+  }
   case ENEMY_CREATED:
     std::cout << "New enemy!" << std::endl;
     break;
   default:
     std::cout << "No recognizable event found" << std::endl;
   }
+}
+
+bool Physics::calc_collision(SDL_Rect r1, SDL_Rect r2) {
+  if (r2.x <= r1.x + r1.w && r2.y <= r1.y + r1.h && r1.x <= r2.x + r2.w &&
+      r1.y <= r2.y + r2.h) {
+    // std::cout << "collision found" << std::endl;
+    return true;
+  }
+  return false;
 }
