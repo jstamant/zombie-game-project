@@ -14,8 +14,10 @@ public:
   void apply_velocities(void);
   virtual void onNotify(entt::entity, Event);
   bool calc_collision(SDL_Rect, SDL_Rect);
+  bool point_circle(int, int, int, int, int);
+  bool line_point(int, int, int, int, int, int);
 private:
-  entt::registry* ecs_;
+  entt::registry *ecs_;
 };
 
 #endif //_PHYSICS_H_

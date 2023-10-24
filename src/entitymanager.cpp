@@ -12,6 +12,7 @@
 #include "ai.h"
 #include "controllable.h"
 #include "health.h"
+#include "hitbox.h"
 #include "line.h"
 #include "position.h"
 #include "renderable.h"
@@ -51,8 +52,14 @@ entt::entity EntityManager::createPlayer(void) {
   entt::entity player = registry_->create();
   registry_->emplace<Renderable>(player);
   registry_->emplace<Velocity>(player);
-  registry_->emplace<Sprite>(player);
-  registry_->emplace<Position>(player, WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 0);
+  auto s = registry_->emplace<Sprite>(player);
+  auto p = registry_->emplace<Position>(player, WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 0);
+  SDL_Rect box;
+  box.x = p.x - s.offsetX;
+  box.y = p.y - s.offsetY;
+  box.w = s.rect.w;
+  box.h = s.rect.h;
+  registry_->emplace<HitBox>(player, box);
   registry_->emplace<Controllable>(player, true);
   registry_->emplace<Health>(player);
   return player;
@@ -62,9 +69,16 @@ entt::entity EntityManager::createZombie(entt::entity target) {
   entt::entity zombie = registry_->create();
   registry_->emplace<Renderable>(zombie);
   registry_->emplace<Velocity>(zombie);
-  registry_->emplace<Sprite>(zombie).setRow(1);
-  registry_->emplace<Position>(zombie, WINDOW_WIDTH + 100,
-                               rand() % WINDOW_HEIGHT);
+  Sprite &s = registry_->emplace<Sprite>(zombie);
+  s.setRow(1);
+  Position p = registry_->emplace<Position>(zombie, WINDOW_WIDTH + 100,
+                                        rand() % WINDOW_HEIGHT);
+  SDL_Rect box;
+  box.x = p.x - s.offsetX;
+  box.y = p.y - s.offsetY;
+  box.w = s.rect.w;
+  box.h = s.rect.h;
+  registry_->emplace<HitBox>(zombie, box);
   registry_->emplace<AI>(zombie).target = target;
   registry_->emplace<Health>(zombie);
   return zombie;

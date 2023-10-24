@@ -3,6 +3,7 @@
 
 #include "defines.h"
 #include "globals.h"
+#include "hitbox.h"
 #include "line.h"
 #include "renderable.h"
 #include "rendersystem.h"
