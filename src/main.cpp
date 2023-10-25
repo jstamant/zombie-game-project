@@ -57,6 +57,7 @@ int main(void)
   entt::registry registry;
   EntityManager entitymanager(&registry);
   int enemy_spawn = 0;
+  int ammo_spawn = 0;
   srand(time(NULL));
 
   // Start up SDL and create the window
@@ -83,6 +84,10 @@ int main(void)
     if (enemy_spawn++ >= 100) {
       entitymanager.createZombie(player);
       enemy_spawn = 0;
+    }
+    if (ammo_spawn++ >= 500) {
+      entitymanager.create_ammo();
+      ammo_spawn = 0;
     }
 
     // Perform game logic

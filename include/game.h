@@ -4,8 +4,9 @@
 class Game
 {
 public:
-    Game();
-    bool running;
+  Game();
+  bool running;
+  int ammo = 20;
 private:
 };
 

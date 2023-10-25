@@ -14,6 +14,7 @@ public:
     void createBullet(void);
     entt::entity createPlayer(void);
     entt::entity createZombie(entt::entity);
+    entt::entity create_ammo(void);
 private:
     entt::registry* registry_; //Directly coupled to the global ECS for ease
 };

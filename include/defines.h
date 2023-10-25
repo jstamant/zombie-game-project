@@ -13,8 +13,8 @@
 
 enum Event
 {
-  BULLET_FIRED,
-  ENEMY_CREATED
+  EVENT_BULLET_FIRED,
+  EVENT_ENEMY_CREATED
     /* MOVE_UP, */
     /* MOVE_DOWN, */
     /* MOVE_LEFT, */
@@ -28,10 +28,10 @@ enum Event
  */
 enum EntityRow
 {
-    CHARACTER = 1,
-    ZOMBIE,
-    WALL,
-    AMMO
+    SPRITESHEET_ROW_CHARACTER = 1,
+    SPRITESHEET_ROW_ZOMBIE,
+    SPRITESHEET_ROW_WALL,
+    SPRITESHEET_ROW_AMMO
 };
 
 #endif //_DEFINES_H_

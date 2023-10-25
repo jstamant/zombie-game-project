@@ -2,8 +2,8 @@
 // physics.cpp
 //******************************************************************************
 
-#include <algorithm>
 #include <cmath>
+#include <forward_list>
 #include <SDL2/SDL.h>
 #include <entt/entt.hpp>
 
@@ -17,6 +17,7 @@
 #include "position.h"
 #include "sprite.h"
 #include "ttl.h"
+#include "type.h"
 #include "velocity.h"
 
 // DEBUG
@@ -28,6 +29,12 @@ Physics::Physics(entt::registry* registry) {
 }
 
 void Physics::evaluate(void) {
+  std::forward_list<entt::entity> collisions = find_collisions();
+  for (auto entity : collisions) {
+    if (ecs_->get<Type>(entity) == ENTITY_TYPE_AMMO)
+      std::cout << "AMMO HAS A COLLISION!" << std::endl;
+  }
+
   auto view = ecs_->view<AI>();
   for (auto entity : view) {
     // Seek player
@@ -126,7 +133,8 @@ void Physics::apply_velocities(void) {
 void Physics::onNotify(entt::entity entity, Event event) {
   std::cout << "Physics manager notified!" << std::endl;
   switch (event) {
-  case BULLET_FIRED: {
+  case EVENT_BULLET_FIRED: {
+    // TODO - seg faults when the tip of the line hits only one zombie
     std::cout << "calculating bullet trajectory" << std::endl;
     Line &l = ecs_->get<Line>(entity);
     double angle = atan2(l.y2 - l.y1, l.x2 - l.x1);
@@ -222,7 +230,7 @@ void Physics::onNotify(entt::entity entity, Event event) {
     }
     break;
   }
-  case ENEMY_CREATED:
+  case EVENT_ENEMY_CREATED:
     std::cout << "New enemy!" << std::endl;
     break;
   default:
@@ -255,4 +263,21 @@ bool Physics::line_point(int x1, int y1, int x2, int y2, int closest_x, int clos
   if (d1 + d2 >= length - buffer && d1 + d2 <= length + buffer)
     return true;
   return false;
+}
+
+std::forward_list<entt::entity> Physics::find_collisions(void) {
+  std::forward_list<entt::entity> collisions;
+  auto view = ecs_->view<Position>(entt::exclude<Line>); // All entities but bullets
+  for (entt::entity entity : view) {
+    for (entt::entity other : view) {
+      if (entity != other){
+        auto entity_box = ecs_->get<HitBox>(entity);
+        auto other_box = ecs_->get<HitBox>(other);
+        if (calc_collision(entity_box, other_box)) {
+          collisions.push_front(entity);
+        }
+      }
+    }
+  }
+  return collisions;
 }

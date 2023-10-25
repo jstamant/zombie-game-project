@@ -1,6 +1,7 @@
 #ifndef _PHYSICS_H_
 #define _PHYSICS_H_
 
+#include <forward_list>
 #include <SDL2/SDL.h>
 #include <entt/entt.hpp>
 
@@ -18,6 +19,7 @@ public:
   bool line_point(int, int, int, int, int, int);
 private:
   entt::registry *ecs_;
+  std::forward_list<entt::entity> find_collisions(void);
 };
 
 #endif //_PHYSICS_H_

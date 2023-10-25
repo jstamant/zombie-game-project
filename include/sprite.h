@@ -12,6 +12,7 @@ public:
     Sprite();
     static SDL_Texture* spritesheet;
     SDL_Rect rect;
+    //TODO turn offset into a struct like SDL point?
     int offsetX;
     int offsetY;
     //Access functions

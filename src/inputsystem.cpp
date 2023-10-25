@@ -36,7 +36,10 @@ void processAllEvents(entt::registry* ecs, EntityManager* em)
         //User presses left-click
         if (gEventQueue.type == SDL_MOUSEBUTTONDOWN) {
             if (gEventQueue.button.button == SDL_BUTTON_LEFT) {
+              if (gGame.ammo > 0) {
                 em->createBullet();
+                gGame.ammo--;
+              }
             }
         }
     }

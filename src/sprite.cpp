@@ -19,7 +19,7 @@ Sprite::Sprite() {
     offsetY = 16;
     //Default sprite is the player sprite
     row_ = 0;
-    frame_ = 1;
+    frame_ = 0;
     //Default clip is a 32x32 pixel sprite
     rect.x = 0;
     rect.y = 0;
@@ -32,7 +32,7 @@ Sprite::Sprite() {
         if (spritesheet == NULL) //Not sure if this works as intended
             std::cout << "Failed to load spritesheet" << std::endl;
     }
-    //NEED TO FREE THIS TEXTURE ON DESTRUCTION
+    // TODO - NEED TO FREE THIS TEXTURE ON DESTRUCTION
 }
 
 //******************************************************************************
@@ -40,6 +40,11 @@ Sprite::Sprite() {
 //******************************************************************************
 
 void Sprite::setRow(int new_row) {
-    row_ = new_row;
-    rect.y = row_*32;
+  row_ = new_row;
+  rect.y = row_ * 32;
+}
+
+void Sprite::setFrame(int frame) {
+  frame_ = frame;
+  rect.x = 32 * frame_;
 }
