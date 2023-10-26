@@ -4,8 +4,11 @@
 #include <forward_list>
 #include <SDL2/SDL.h>
 #include <entt/entt.hpp>
+#include <utility>
 
 #include "observer.h"
+
+typedef std::pair<entt::entity, entt::entity> Collision;
 
 class Physics : public Observer
 {
@@ -19,7 +22,7 @@ public:
   bool line_point(int, int, int, int, int, int);
 private:
   entt::registry *ecs_;
-  std::forward_list<entt::entity> find_collisions(void);
+  std::forward_list<Collision> find_collisions(void);
 };
 
 #endif //_PHYSICS_H_

@@ -10,6 +10,8 @@
 #include "ai.h"
 #include "controllable.h"
 #include "defines.h"
+#include "entitymanager.h"
+#include "globals.h"
 #include "health.h"
 #include "hitbox.h"
 #include "line.h"
@@ -29,15 +31,81 @@ Physics::Physics(entt::registry* registry) {
 }
 
 void Physics::evaluate(void) {
-  std::forward_list<entt::entity> collisions = find_collisions();
-  for (auto entity : collisions) {
-    if (ecs_->get<Type>(entity) == ENTITY_TYPE_AMMO)
-      std::cout << "AMMO HAS A COLLISION!" << std::endl;
+  std::forward_list<Collision> collisions = find_collisions();
+  for (auto collision : collisions) {
+    entt::entity entity = collision.first;
+    entt::entity other = collision.second;
+
+    switch (ecs_->get<Type>(entity)) {
+    case ENTITY_TYPE_ENEMY: {
+      // Push away from other zombies
+      if (ecs_->get<Type>(other) == ENTITY_TYPE_ENEMY) {
+        Position posOther = ecs_->get<Position>(other);
+        Position &posSelf = ecs_->get<Position>(entity);
+        double dx = posOther.x - posSelf.x;
+        double dy = posOther.y - posSelf.y;
+        double distance = sqrt(pow(dx, 2) + pow(dy, 2));
+        if (distance < 24) {
+          double angle = atan2(dy, dx);
+          Velocity &velocity = ecs_->get<Velocity>(entity);
+          velocity.add(-0.2, angle);
+          Velocity &vother = ecs_->get<Velocity>(other);
+          vother.add(0.2, angle);
+        }
+      }
+
+      // Push away from the player
+      if (ecs_->get<Type>(other) == ENTITY_TYPE_PLAYER) {
+        Position posOther = ecs_->get<Position>(other);
+        Position &posSelf = ecs_->get<Position>(entity);
+        float dx = posOther.x - posSelf.x;
+        float dy = posOther.y - posSelf.y;
+        double distance = sqrt(pow(dx, 2) + pow(dy, 2));
+        if (distance < 32) {
+          double angle = atan2(dy, dx);
+          Velocity &velocity = ecs_->get<Velocity>(entity);
+          velocity.add(-0.6, angle);
+          Velocity &vplayer = ecs_->get<Velocity>(other);
+          vplayer.add(0.8, angle);
+          // And inflict damage to the player
+          Health &health = ecs_->get<Health>(other);
+          health.health -= 1;
+          if (health.health <= 0) {
+            if (ecs_->all_of<Controllable>(other)) {
+              ecs_->remove<Controllable>(other);
+              std::cout << "REMOVED" << std::endl;
+            }
+            Sprite &sprite = ecs_->get<Sprite>(other);
+            sprite.rect.x = 64;
+          }
+        }
+      }
+      break;
+    }
+
+    case ENTITY_TYPE_PLAYER: {
+      // Collect ammo
+      if (ecs_->get<Type>(other) == ENTITY_TYPE_AMMO) {
+        ecs_->emplace<EntityFlag>(other, ENTITY_FLAG_DESTROY);
+        gGame.ammo += 20;
+        std::cout << "Ammo collected!" << std::endl;
+        std::cout << "Ammo now at " << gGame.ammo << std::endl;
+      }
+      break;
+    }
+
+    case ENTITY_TYPE_AMMO:
+      break;
+
+    default:
+      std::cout << "Unhandled collission detected!" << std::endl;
+    }
   }
 
+  // Seek player
+  // TODO decouple this into some sort of logic component
   auto view = ecs_->view<AI>();
   for (auto entity : view) {
-    // Seek player
     entt::entity target = view.get<AI>(entity).target;
     Position destination = ecs_->get<Position>(target);
     Position &source = ecs_->get<Position>(entity);
@@ -48,56 +116,6 @@ void Physics::evaluate(void) {
     velocity.add(Z_SPEED, angle);
     source.rotation = angle;
 
-    // Push away from other zombies
-    {
-      auto view = ecs_->view<AI>();
-      for (auto other : view) {
-        if (other != entity) {
-          Position posOther = ecs_->get<Position>(other);
-          Position &posSelf = ecs_->get<Position>(entity);
-          double dx = posOther.x - posSelf.x;
-          double dy = posOther.y - posSelf.y;
-          double distance = sqrt(pow(dx, 2) + pow(dy, 2));
-          if (distance < 24) {
-            double angle = atan2(dy, dx);
-            Velocity &velocity = ecs_->get<Velocity>(entity);
-            velocity.add(-0.2, angle);
-            Velocity &vother = ecs_->get<Velocity>(other);
-            vother.add(0.2, angle);
-          }
-        }
-      }
-    }
-
-    // Push away from the player
-    entt::entity player = ecs_->view<Controllable>().front();
-    if (ecs_->valid(player)) {
-      if (entity != player) {
-        Position posOther = ecs_->get<Position>(player);
-        Position &posSelf = ecs_->get<Position>(entity);
-        float dx = posOther.x - posSelf.x;
-        float dy = posOther.y - posSelf.y;
-        double distance = sqrt(pow(dx, 2) + pow(dy, 2));
-        if (distance < 32) {
-          double angle = atan2(dy, dx);
-          Velocity &velocity = ecs_->get<Velocity>(entity);
-          velocity.add(-0.6, angle);
-          Velocity &vplayer = ecs_->get<Velocity>(player);
-          vplayer.add(0.8, angle);
-          // And inflict damage to the player
-          Health &health = ecs_->get<Health>(player);
-          health.health -= 1;
-          if (health.health <= 0) {
-            if (ecs_->all_of<Controllable>(player)) {
-              ecs_->remove<Controllable>(player);
-              std::cout << "REMOVED" << std::endl;
-            }
-            Sprite &sprite = ecs_->get<Sprite>(player);
-            sprite.rect.x = 64;
-          }
-        }
-      }
-    }
   }
 
   // Expire bullets
@@ -107,6 +125,16 @@ void Physics::evaluate(void) {
       TTL &ttl = view.get<TTL>(entity);
       if (ttl-- <= 0)
         ecs_->destroy(entity);
+    }
+  }
+
+  // Destroy flagged entities
+  {
+    auto view = ecs_->view<EntityFlag>();
+    for (entt::entity entity : view) {
+      if (ecs_->get<EntityFlag>(entity) == ENTITY_FLAG_DESTROY) {
+        ecs_->destroy(entity);
+      }
     }
   }
 }
@@ -265,16 +293,18 @@ bool Physics::line_point(int x1, int y1, int x2, int y2, int closest_x, int clos
   return false;
 }
 
-std::forward_list<entt::entity> Physics::find_collisions(void) {
-  std::forward_list<entt::entity> collisions;
-  auto view = ecs_->view<Position>(entt::exclude<Line>); // All entities but bullets
+/* Returns a list of all collisions if the form of an array containing
+   [source entity, other entity] */
+std::forward_list<Collision> Physics::find_collisions(void) {
+  std::forward_list<Collision> collisions;
+  auto view = ecs_->view<Position>(entt::exclude<Line>); // (all entities but bullets)
   for (entt::entity entity : view) {
     for (entt::entity other : view) {
       if (entity != other){
         auto entity_box = ecs_->get<HitBox>(entity);
         auto other_box = ecs_->get<HitBox>(other);
         if (calc_collision(entity_box, other_box)) {
-          collisions.push_front(entity);
+          collisions.push_front({entity, other});
         }
       }
     }

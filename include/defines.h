@@ -11,10 +11,12 @@
 #define BULLET_FLASH_DURATION 5
 #define BULLET_RANGE 1000
 
+// TODO These are to be implemented!
 enum Event
 {
   EVENT_BULLET_FIRED,
-  EVENT_ENEMY_CREATED
+  EVENT_ENEMY_CREATED,
+  EVENT_DESTROY_ENTITY
     /* MOVE_UP, */
     /* MOVE_DOWN, */
     /* MOVE_LEFT, */

@@ -7,6 +7,10 @@
 #include <entt/entt.hpp>
 #include "subject.h"
 
+enum EntityFlag {
+  ENTITY_FLAG_DESTROY
+};
+
 class EntityManager : public Subject
 {
 public:
