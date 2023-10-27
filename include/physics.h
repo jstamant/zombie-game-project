@@ -18,11 +18,11 @@ public:
   void apply_velocities(void);
   virtual void onNotify(entt::entity, Event);
   bool calc_collision(SDL_Rect, SDL_Rect);
-  bool point_circle(int, int, int, int, int);
   bool line_point(int, int, int, int, int, int);
 private:
   entt::registry *ecs_;
   std::forward_list<Collision> find_collisions(void);
+  bool point_circle(SDL_Point, SDL_Point, int);
 };
 
 #endif //_PHYSICS_H_

@@ -42,17 +42,6 @@ SDL_Surface* loadSurface(std::string);
 
 int main(void)
 {
-
-  Velocity vel;
-  std::cout << "x: " << vel.get_x() << std::endl;
-  std::cout << "y: " << vel.get_y() << std::endl;
-  vel.add(2, M_PI_2);
-  std::cout << "x: " << vel.get_x() << std::endl;
-  std::cout << "y: " << vel.get_y() << std::endl;
-  vel.add(4, -M_PI_2);
-  std::cout << "x: " << vel.get_x() << std::endl;
-  std::cout << "y: " << vel.get_y() << std::endl;
-
   // TESTING STUFF TO INITIALIZE FOR TESTING
   entt::registry registry;
   EntityManager entitymanager(&registry);

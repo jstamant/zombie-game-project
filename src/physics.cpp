@@ -159,18 +159,16 @@ void Physics::apply_velocities(void) {
 }
 
 void Physics::onNotify(entt::entity entity, Event event) {
-  std::cout << "Physics manager notified!" << std::endl;
   switch (event) {
   case EVENT_BULLET_FIRED: {
-    // TODO - seg faults when the tip of the line hits only one zombie
-    std::cout << "calculating bullet trajectory" << std::endl;
     Line &l = ecs_->get<Line>(entity);
     double angle = atan2(l.y2 - l.y1, l.x2 - l.x1);
     double dist = (l.x2 - l.x1) / cos(angle);
-    // if (dist < BULLET_RANGE) {
-    //   l.x2 = l.x1 + BULLET_RANGE * cos(angle);
-    //   l.y2 = l.y1 + BULLET_RANGE * sin(angle);
-    // }
+    if (dist < BULLET_RANGE) {
+      l.x2 = l.x1 + BULLET_RANGE * cos(angle);
+      l.y2 = l.y1 + BULLET_RANGE * sin(angle);
+    }
+
     SDL_Rect bullet_bounds;
     // This is required to make the hitbox always positive
     if (l.x1 < l.x2) {
@@ -187,6 +185,7 @@ void Physics::onNotify(entt::entity entity, Event event) {
       bullet_bounds.y = l.y2;
       bullet_bounds.h = l.y1 - l.y2;
     }
+
     auto view = ecs_->view<AI>();
     entt::entity closest;
     double closest_distance = HUGE_VAL;
@@ -196,18 +195,15 @@ void Physics::onNotify(entt::entity entity, Event event) {
       HitBox box = ecs_->get<HitBox>(zombie);
       Position p = ecs_->get<Position>(zombie);
       if (calc_collision(bullet_bounds, box)) {
-        std::cout << "potential collission, looking at line collision" << std::endl;
-        bool inside1 = point_circle(l.x1, l.y1, p.x, p.y, 32);
-        bool inside2 = point_circle(l.x2, l.y2, p.x, p.y, 32);
+        bool inside1 = point_circle({l.x1, l.y1}, {(int)p.x, (int)p.y}, 32);
+        bool inside2 = point_circle({l.x2, l.y2}, {(int)p.x, (int)p.y}, 32);
         if (inside1 || inside2) {
-          // TODO need to properly take care of this case. I don't check properly
-          std::cout << "collision on endpoint!" << std::endl;
           collision = true; // Indicates collision with ends of the line
-          distance = sqrt(pow(l.x1-p.x,2) + pow(l.y1-p.y,2));
-          if (distance <=32) { // Indicates that the zombie is ON the player
-            std::cout << "collision on CLOSE endpoint!" << std::endl;
-            closest = zombie;
-            collision = true;
+          distance = sqrt(pow(l.x1 - p.x, 2) + pow(l.y1 - p.y, 2));
+          closest = zombie;
+          closest_distance = distance;
+          collision = true;
+          if (distance <= 32) { // Indicates that the zombie is ON the player
             break;
           }
         }
@@ -218,18 +214,15 @@ void Physics::onNotify(entt::entity entity, Event event) {
         float closest_x = l.x1 + (dot * (l.x2 - l.x1));
         float closest_y = l.y1 + (dot * (l.y2 - l.y1));
         bool on_segment = line_point(l.x1, l.y1, l.x2, l.y2, closest_x, closest_y);
+        // TODO the wrong zombie is sometimes hit, due to how it calculates the point onto the segment
         if (on_segment) { // Indicates that the closest point is within the length of the line
-          std::cout << "somewhere between segment!" << std::endl;
           distance = sqrt(pow(closest_x - p.x, 2) + pow(closest_y - p.y, 2));
           if (distance <= 32) { // Indicates that the closest point collides ON the line
             collision = true;
-            std::cout << "collision on segment!" << std::endl;
             //Get the exact collision point
+            // TODO the exact point is not calculated properly
             distance = sqrt(pow(closest_x - l.x1, 2) + pow(closest_y - l.y1, 2));
             if (distance < closest_distance) { // If the collision point is closer than any other collision
-              std::cout << "new closest found!" << std::endl
-                        << "coordinates: " << closest_x << " " << closest_y
-                        << std::endl;
               closest_distance = distance;
               closest = zombie;
             }
@@ -238,26 +231,20 @@ void Physics::onNotify(entt::entity entity, Event event) {
       }
     }
     if (collision) {
-      std::cout << "THERE WAS A COLLISION" << &closest << std::endl;
-      std::cout << "closest is " << &closest << std::endl;
-      std::cout << "closest dist is " << closest_distance << std::endl;
       Health &h = ecs_->get<Health>(closest);
-      std::cout << "Health before: " << h.health << std::endl;
       h.health -= 20;
-      std::cout << "Health after: " << h.health << std::endl;
       if (h.health <= 0) {
-        std::cout << "Destroying entity..." << std::endl;
+        std::cout << "Destroying zombie..." << std::endl;
+        // TODO decouple this to an event queue, and add graphics for hurt zombies
         ecs_->destroy(closest);
       }
-      std::cout << "Shortening the bullet line..." << std::endl;
+      // Shortening the bullet line
       l.x2 = l.x1 + closest_distance * cos(angle);
       l.y2 = l.y1 + closest_distance * sin(angle);
-      std::cout << "done" << std::endl;
-    } else {
-      std::cout << "There was NO collision" << std::endl;
     }
     break;
   }
+
   case EVENT_ENEMY_CREATED:
     std::cout << "New enemy!" << std::endl;
     break;
@@ -275,10 +262,9 @@ bool Physics::calc_collision(SDL_Rect r1, SDL_Rect r2) {
 }
 
 /* Checks if a point is inside a circle */
-bool Physics::point_circle(int x, int y, int cx, int cy, int r) {
-  double distance = sqrt(pow(cx - x, 2) + pow(cy - y, 2));
-  if (distance <= r)
-    return true;
+bool Physics::point_circle(SDL_Point p, SDL_Point c, int r) {
+  double distance = sqrt(pow(c.x - p.x, 2) + pow(c.y - p.y, 2));
+  if (distance <= r) return true;
   return false;
 }
 
