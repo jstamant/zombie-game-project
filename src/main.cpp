@@ -52,6 +52,7 @@ int main(void)
   // Start up SDL and create the window
   if (!initializeSDL())
     printf("Failed to initialize SDL!\n");
+  RenderSystem render_system(gRenderer, &registry);
 
   // Initialize some system(s)
   Physics physics(&registry);
@@ -85,7 +86,7 @@ int main(void)
     physics.apply_velocities();
 
     // Perform rendering
-    renderAll(gRenderer, &registry);
+    render_system.renderAll();
   }
   //Free resources and close SDL
   close();

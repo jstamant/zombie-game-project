@@ -1,6 +1,8 @@
+#include <SDL2/SDL_render.h>
 #include <cmath>
 #include <SDL2/SDL.h>
 
+#include "controllable.h"
 #include "defines.h"
 #include "globals.h"
 #include "hitbox.h"
@@ -13,40 +15,73 @@
 //DEBUG
 #include <iostream>
 
-void RenderSystem::init()
-{
-    std::cout << "RenderSystem init()" << std::endl;
+RenderSystem::RenderSystem(SDL_Renderer* renderer, entt::registry* registry) {
+  init();
+  renderer_ = renderer;
+  ecs_ = registry;
+  camera_ = {0, 0};
 }
 
-void renderAll(SDL_Renderer* renderer, entt::registry* ecs) {
+void RenderSystem::init()
+{
+    std::cout << "RenderSystem init() (does nothing)" << std::endl;
+}
+
+void RenderSystem::renderAll() {
+    // TODO need to implement some global coordinates and camera coordinates system
     // Start by clearing the screen, filling it with a placeholder color
-    SDL_SetRenderDrawColor(renderer, 0xaa, 0xaa, 0xaa, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer_, 0xaa, 0xaa, 0xaa, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer_);
+
+    // Get player coordinates for the camera
+    entt::entity player = ecs_->view<Controllable>().front();
+    if (ecs_->valid(player)) {
+      Position p = ecs_->get<Position>(player);
+      camera_ = {(int)p.x, (int)p.y};
+    }
 
     // Render all bullets
     {
-        auto view = ecs->view<Line>();
+        auto view = ecs_->view<Line>();
         for (entt::entity bullet : view) {
-          Line &l = ecs->get<Line>(bullet);
-          SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0x00, SDL_ALPHA_OPAQUE); // Yellow
-          SDL_RenderDrawLine(renderer, l.x1, l.y1, l.x2, l.y2);
+          Line &l = ecs_->get<Line>(bullet);
+          SDL_SetRenderDrawColor(renderer_, 0xff, 0xff, 0x00, SDL_ALPHA_OPAQUE); // Yellow
+          SDL_RenderDrawLine(renderer_, l.x1 - camera_.x + WINDOW_WIDTH / 2,
+                             l.y1 - camera_.y + WINDOW_HEIGHT / 2,
+                             l.x2 - camera_.x + WINDOW_WIDTH / 2,
+                             l.y2 - camera_.y + WINDOW_HEIGHT / 2);
         }
     }
     // Render all entities with sprites
-    auto view = ecs->view<Renderable, Position, Sprite>();
+    auto view = ecs_->view<Renderable, Position, Sprite>();
     for (entt::entity entity : view) {
         Sprite sprite = view.get<Sprite>(entity);
         Position p = view.get<Position>(entity);
         SDL_Rect dest;
-        dest.x = p.x - sprite.offsetX;
-        dest.y = p.y - sprite.offsetY;
+        dest.x = p.x - sprite.offsetX - camera_.x + WINDOW_WIDTH / 2;
+        dest.y = p.y - sprite.offsetY - camera_.y + WINDOW_HEIGHT / 2;
         dest.w = sprite.rect.w;
         dest.h = sprite.rect.h;
         // Render entity's sprite to screen, with rotation around the sprite's center
-        SDL_RenderCopyEx(renderer, sprite.spritesheet, &(sprite.rect), &dest,
+        SDL_RenderCopyEx(renderer_, sprite.spritesheet, &(sprite.rect), &dest,
                         p.rotation * 180 / M_PI, NULL, SDL_FLIP_NONE);
     }
 
+    // DEBUG render a rectangle for orienting yourself while I add a camera
+    SDL_SetRenderDrawColor(renderer_, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
+    SDL_Rect bounds1 = {-10, -10, WINDOW_WIDTH+20, WINDOW_HEIGHT+20};
+    SDL_Rect bounds2 = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+    SDL_Rect bounds3 = {10, 10, WINDOW_WIDTH - 20, WINDOW_HEIGHT - 20};
+    bounds1.x -= camera_.x - WINDOW_WIDTH/2;
+    bounds1.y -= camera_.y - WINDOW_HEIGHT/2;
+    bounds2.x -= camera_.x - WINDOW_WIDTH/2;
+    bounds2.y -= camera_.y - WINDOW_HEIGHT/2;
+    bounds3.x -= camera_.x - WINDOW_WIDTH/2;
+    bounds3.y -= camera_.y - WINDOW_HEIGHT/2;
+    SDL_RenderDrawRect(renderer_, &bounds1);
+    SDL_RenderDrawRect(renderer_, &bounds2);
+    SDL_RenderDrawRect(renderer_, &bounds3);
+
     //Push the composed frame to the screen
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer_);
 }
