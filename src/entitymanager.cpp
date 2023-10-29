@@ -42,6 +42,11 @@ void EntityManager::createBullet(void) {
     p.x = (int)playerPos.x;
     p.y = (int)playerPos.y;
     SDL_Point target = {gEventQueue.button.x, gEventQueue.button.y};
+
+    // Translate locale screen coordinates to global coordinates
+    target.x += (int)playerPos.x - WINDOW_WIDTH / 2;
+    target.y += (int)playerPos.y - WINDOW_HEIGHT / 2;
+
     p.rotation = atan2(target.y - p.y, target.x - p.x);
     registry_->emplace<Line>(bullet, p.x, p.y, target.x, target.y);
     registry_->emplace<TTL>(bullet, BULLET_FLASH_DURATION);

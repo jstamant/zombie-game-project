@@ -60,7 +60,8 @@ void processAllEvents(entt::registry* ecs, EntityManager* em)
         SDL_Point mouse;
         SDL_GetMouseState(&mouse.x, &mouse.y);
         ecs->patch<Position>(entity, [&mouse](auto &p) {
-          p.rotation = atan2(mouse.y - p.y, mouse.x - p.x);
+          // Works according to local (screen) coordinates
+          p.rotation = atan2(mouse.y - WINDOW_HEIGHT/2, mouse.x - WINDOW_WIDTH/2);
         });
     }
 }
