@@ -82,6 +82,43 @@ void RenderSystem::renderAll() {
     SDL_RenderDrawRect(renderer_, &bounds2);
     SDL_RenderDrawRect(renderer_, &bounds3);
 
+    // TESTING render text to screen
+    SDL_Rect src = {0, 0, WINDOW_WIDTH, 50};
+    SDL_Rect dest = {0, 0, WINDOW_WIDTH, 50};
+    SDL_RenderCopy(renderer_, gTextTexture, &src, &dest);
+
     //Push the composed frame to the screen
     SDL_RenderPresent(renderer_);
+}
+
+/* TODO I need to improve the loading of surfaces/textures. It's a mess, right
+   now. And I need to make my own class for texture, along with member
+   functions. */
+bool loadFromRenderedText(std::string textureText, SDL_Color textColor) {
+  // Get rid of preexisting texture
+  // free();
+  // Render text surface
+  SDL_Surface *textSurface =
+      TTF_RenderText_Solid(gFont, textureText.c_str(), textColor);
+  if (textSurface == NULL) {
+    printf("Unable to render text surface! SDL_ttf Error: %s\n",
+           TTF_GetError());
+  } else {
+    // Create texture from surface pixels
+    gTextTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+    if (gTextTexture == NULL) {
+      printf("Unable to create texture from rendered text! SDL Error: %s\n",
+             SDL_GetError());
+    } else {
+      // Get image dimensions
+      // mWidth = textSurface->w;
+      // mHeight = textSurface->h;
+    }
+
+    // Get rid of old surface
+    // SDL_FreeSurface(textSurface);
+  }
+
+  // Return success
+  return gTextTexture != NULL;
 }

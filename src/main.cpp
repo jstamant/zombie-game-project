@@ -5,6 +5,7 @@
 //Include SDL dependencies
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h> //FOR TESTING IN THIS MONOLITHIC FILE
+#include <SDL2/SDL_ttf.h>
 
 //Include std dependencies
 #include <stdlib.h>
@@ -33,12 +34,15 @@ SDL_Event gEventQueue;              //The event queue for the entire game
 Game gGame;
 SDL_Renderer* gRenderer = NULL;
 SDL_Surface* gScreenSurface = NULL; //The surface contained by the window
+SDL_Texture* gTextTexture = NULL;
 SDL_Window* gWindow = NULL;         //The window we'll be rendering to
+TTF_Font* gFont = NULL;
 
 //FOR TESTING, global function declerations TO BE MOVED OR REMOVED
 //Frees media and shuts down SDL
 void close();
 SDL_Surface* loadSurface(std::string);
+bool loadMedia(void);
 
 int main(void)
 {
@@ -53,6 +57,11 @@ int main(void)
   if (!initializeSDL())
     printf("Failed to initialize SDL!\n");
   RenderSystem render_system(gRenderer, &registry);
+  // Initialize SDL_ttf
+  if (TTF_Init() == -1) {
+    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+  }
+  loadMedia();
 
   // Initialize some system(s)
   Physics physics(&registry);
@@ -125,4 +134,26 @@ SDL_Surface* loadSurface(std::string path)
         SDL_FreeSurface(loadedSurface);
     }
     return optimizedSurface;
+}
+
+bool loadMedia() {
+    // Loading success flag
+    bool success = true;
+
+    // Open the font
+    gFont = TTF_OpenFont("arial.ttf", 28);
+    if (gFont == NULL) {
+      printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+      success = false;
+    } else {
+      // Render text
+      SDL_Color textColor = {0, 0, 0};
+      loadFromRenderedText("testing!", textColor);
+      if (!gTextTexture) {
+            printf("Failed to render text texture!\n");
+            success = false;
+      }
+    }
+
+    return success;
 }

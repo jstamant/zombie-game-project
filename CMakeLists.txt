@@ -25,7 +25,7 @@ set(SOURCES
 add_executable(sdl-app.out ${SOURCES})
 
 include_directories(include)
-target_link_libraries(sdl-app.out SDL2 SDL2_image)
+target_link_libraries(sdl-app.out SDL2 SDL2_image SDL2_ttf)
 
 add_custom_target(run
   COMMAND sdl-app.out

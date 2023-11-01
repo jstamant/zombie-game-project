@@ -58,6 +58,7 @@ First, install the game's dependencies:
 
 * [SDL2](https://www.libsdl.org/)
 * [SDL_image](https://github.com/libsdl-org/SDL_image)
+* [SDL_ttf](https://github.com/libsdl-org/SDL_ttf)
 * [EnTT](https://github.com/skypjack/entt) >= v3.12.0
 
 Then, generate a makefile using `cmake` from the `build directory`:
