@@ -4,10 +4,12 @@
 
 //Include SDL dependencies
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h> //FOR TESTING IN THIS MONOLITHIC FILE
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
 //Include std dependencies
+#include <cmath>
+#include <iostream>
 #include <stdlib.h>
 #include <time.h>
 
@@ -25,10 +27,6 @@
 #include "rendersystem.h"
 #include "velocity.h"
 
-// FOR TESTING
-#include <cmath>
-#include <iostream>
-
 //Make these variables global for now...
 SDL_Event gEventQueue;              //The event queue for the entire game
 Game gGame;
@@ -38,7 +36,7 @@ SDL_Texture* gTextTexture = NULL;
 SDL_Window* gWindow = NULL;         //The window we'll be rendering to
 TTF_Font* gFont = NULL;
 
-//FOR TESTING, global function declerations TO BE MOVED OR REMOVED
+// TODO - move these functions, they shouldn't really be global
 //Frees media and shuts down SDL
 void close();
 SDL_Surface* loadSurface(std::string);
@@ -46,7 +44,6 @@ bool loadMedia(void);
 
 int main(void)
 {
-  // TESTING STUFF TO INITIALIZE FOR TESTING
   entt::registry registry;
   EntityManager entitymanager(&registry);
   int enemy_spawn = 0;
@@ -69,7 +66,7 @@ int main(void)
 
   entt::entity player = entitymanager.createPlayer();
 
-  // FOR TESTING, add some zombies
+  // Add some zombies
   for (int i = 0; i < 100; i++)
     entitymanager.createZombie(player);
 
@@ -79,7 +76,7 @@ int main(void)
     // Process input and/or events
     processAllEvents(&registry, &entitymanager);
 
-    // FOR TESTING
+    // Spawn enemies and ammo
     if (enemy_spawn++ >= 100) {
       entitymanager.createZombie(player);
       enemy_spawn = 0;
