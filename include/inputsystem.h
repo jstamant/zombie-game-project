@@ -1,17 +1,21 @@
 #ifndef _INPUTSYSTEM_H_
 #define _INPUTSYSTEM_H_
 
+#include <SDL2/SDL.h>
 #include <entt/entt.hpp>
+
 #include "entitymanager.h"
 
-class InputSystem
-{
+class InputSystem {
 public:
-    void init(void);
-    void processAllEvents(void);
+  InputSystem(entt::registry*, EntityManager*, SDL_Event*);
+  void processAllEvents(void);
+
 private:
+  EntityManager* em_;
+  entt::registry* ecs_;
+  SDL_Event* event_queue_;
 };
 
-void processAllEvents(entt::registry*, EntityManager*);
 
 #endif //_INPUTSYSTEM_H_

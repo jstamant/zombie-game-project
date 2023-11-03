@@ -87,9 +87,9 @@ void Physics::evaluate(void) {
       // Collect ammo
       if (ecs_->get<Type>(other) == ENTITY_TYPE_AMMO) {
         ecs_->emplace<EntityFlag>(other, ENTITY_FLAG_DESTROY);
-        gGame.ammo += 20;
+        game.ammo += 20;
         std::cout << "Ammo collected!" << std::endl;
-        std::cout << "Ammo now at " << gGame.ammo << std::endl;
+        std::cout << "Ammo now at " << game.ammo << std::endl;
       }
       break;
     }

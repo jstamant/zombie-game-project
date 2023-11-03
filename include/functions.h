@@ -6,7 +6,6 @@
 #include <string>
 
 //Generic global functions
-bool initializeSDL(void);
 SDL_Texture* loadTexture(std::string); //Currently defined in main.cpp
 
 #endif //_FUNCTIONS_H_

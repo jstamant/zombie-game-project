@@ -105,7 +105,7 @@ bool loadFromRenderedText(std::string textureText, SDL_Color textColor) {
            TTF_GetError());
   } else {
     // Create texture from surface pixels
-    gTextTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+    gTextTexture = SDL_CreateTextureFromSurface(game.get_renderer(), textSurface);
     if (gTextTexture == NULL) {
       printf("Unable to create texture from rendered text! SDL Error: %s\n",
              SDL_GetError());

@@ -28,17 +28,13 @@
 #include "velocity.h"
 
 //Make these variables global for now...
-SDL_Event gEventQueue;              //The event queue for the entire game
-Game gGame;
-SDL_Renderer* gRenderer = NULL;
-SDL_Surface* gScreenSurface = NULL; //The surface contained by the window
+Game game;
+SDL_Event event_queue_;              //The event queue for the entire game
 SDL_Texture* gTextTexture = NULL;
-SDL_Window* gWindow = NULL;         //The window we'll be rendering to
 TTF_Font* gFont = NULL;
 
 // TODO - move these functions, they shouldn't really be global
 //Frees media and shuts down SDL
-void close();
 SDL_Surface* loadSurface(std::string);
 bool loadMedia(void);
 
@@ -51,9 +47,9 @@ int main(void)
   srand(time(NULL));
 
   // Start up SDL and create the window
-  if (!initializeSDL())
+  if (!game.initializeSDL())
     printf("Failed to initialize SDL!\n");
-  RenderSystem render_system(gRenderer, &registry);
+  RenderSystem render_system(game.get_renderer(), &registry);
   // Initialize SDL_ttf
   if (TTF_Init() == -1) {
     printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
@@ -63,6 +59,7 @@ int main(void)
   // Initialize some system(s)
   Physics physics(&registry);
   entitymanager.addObserver(&physics);
+  InputSystem input_system(&registry, &entitymanager, game.get_event_queue());
 
   entt::entity player = entitymanager.createPlayer();
 
@@ -71,10 +68,10 @@ int main(void)
     entitymanager.createZombie(player);
 
   // While game is running; main game loop
-  gGame.running = true;
-  while (gGame.running) {
+  game.running = true;
+  while (game.running) {
     // Process input and/or events
-    processAllEvents(&registry, &entitymanager);
+    input_system.processAllEvents();
 
     // Spawn enemies and ammo
     if (enemy_spawn++ >= 100) {
@@ -94,22 +91,11 @@ int main(void)
     // Perform rendering
     render_system.renderAll();
   }
+
   //Free resources and close SDL
-  close();
+  game.close();
+
   return 0;
-}
-
-void close(void)
-{
-    //Destroy window
-    SDL_DestroyRenderer(gRenderer);
-    SDL_DestroyWindow(gWindow);
-    gWindow = NULL;
-    gRenderer = NULL;
-
-    //Quit SDL subsystems
-    IMG_Quit();
-    SDL_Quit();
 }
 
 SDL_Surface* loadSurface(std::string path)
@@ -124,7 +110,7 @@ SDL_Surface* loadSurface(std::string path)
     else
     {
         //Convert surface to screen format
-        optimizedSurface = SDL_ConvertSurface(loadedSurface, gScreenSurface->format, 0);
+        optimizedSurface = SDL_ConvertSurface(loadedSurface, game.get_surface()->format, 0);
         if (optimizedSurface == NULL)
             printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
         //Get rid of old loaded surface

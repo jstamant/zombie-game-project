@@ -29,7 +29,7 @@ EntityManager::EntityManager(entt::registry* registry) {
 }
 
 // TODO make this independent of the player when I have a message bus setup
-void EntityManager::createBullet(void) {
+void EntityManager::createBullet(SDL_Point mouse) {
   // Make sure the player is actually alive, or seg fault will
   // happen, since view<Controllable> will return empty when the
   // player has its control removed
@@ -41,14 +41,13 @@ void EntityManager::createBullet(void) {
     Position &playerPos = registry_->get<Position>(player);
     p.x = (int)playerPos.x;
     p.y = (int)playerPos.y;
-    SDL_Point target = {gEventQueue.button.x, gEventQueue.button.y};
 
     // Translate locale screen coordinates to global coordinates
-    target.x += (int)playerPos.x - WINDOW_WIDTH / 2;
-    target.y += (int)playerPos.y - WINDOW_HEIGHT / 2;
+    mouse.x += (int)playerPos.x - WINDOW_WIDTH / 2;
+    mouse.y += (int)playerPos.y - WINDOW_HEIGHT / 2;
 
-    p.rotation = atan2(target.y - p.y, target.x - p.x);
-    registry_->emplace<Line>(bullet, p.x, p.y, target.x, target.y);
+    p.rotation = atan2(mouse.y - p.y, mouse.x - p.x);
+    registry_->emplace<Line>(bullet, p.x, p.y, mouse.x, mouse.y);
     registry_->emplace<TTL>(bullet, BULLET_FLASH_DURATION);
     notify(bullet, EVENT_BULLET_FIRED);
   }

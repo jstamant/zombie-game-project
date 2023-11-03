@@ -4,7 +4,9 @@
 // entitymanager.h
 //************************************************
 
+#include <SDL2/SDL.h>
 #include <entt/entt.hpp>
+
 #include "subject.h"
 
 enum EntityFlag {
@@ -15,7 +17,7 @@ class EntityManager : public Subject
 {
 public:
     EntityManager(entt::registry *);
-    void createBullet(void);
+    void createBullet(SDL_Point);
     entt::entity createPlayer(void);
     entt::entity createZombie(entt::entity);
     entt::entity create_ammo(void);
