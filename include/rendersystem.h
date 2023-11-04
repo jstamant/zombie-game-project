@@ -10,15 +10,15 @@ class RenderSystem
 {
 public:
   RenderSystem(SDL_Renderer*, entt::registry*);
+  SDL_Texture *loadTexture(std::string);
   void renderAll();
 
 private:
-  void init(void);
   SDL_Point camera_;
   entt::registry *ecs_;
   SDL_Renderer *renderer_;
+  SDL_Texture *spritesheet_;
 };
-
 
 bool loadFromRenderedText(std::string, SDL_Color);
 

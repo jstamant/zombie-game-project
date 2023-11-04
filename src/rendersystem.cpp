@@ -1,30 +1,47 @@
-#include <SDL2/SDL_render.h>
-#include <cmath>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <cmath>
+#include <iostream>
+#include <string>
 
 #include "controllable.h"
 #include "defines.h"
 #include "globals.h"
 #include "hitbox.h"
 #include "line.h"
+#include "position.h"
 #include "renderable.h"
 #include "rendersystem.h"
 #include "sprite.h"
-#include "position.h"
 
-//DEBUG
-#include <iostream>
-
-RenderSystem::RenderSystem(SDL_Renderer* renderer, entt::registry* registry) {
-  init();
+RenderSystem::RenderSystem(SDL_Renderer *renderer, entt::registry *registry) {
   renderer_ = renderer;
   ecs_ = registry;
   camera_ = {0, 0};
+
+  spritesheet_ = loadTexture("spritesheet.png");
+  if (spritesheet_ == NULL) // Not sure if this works as intended
+    std::cout << "Failed to load spritesheet" << std::endl;
+  std::cout << "Loaded spritesheet successfully" << std::endl;
+  // TODO - NEED TO FREE THIS TEXTURE ON DESTRUCTION
 }
 
-void RenderSystem::init()
-{
-    std::cout << "RenderSystem init() (does nothing)" << std::endl;
+SDL_Texture *RenderSystem::loadTexture(std::string path) {
+  SDL_Texture *texture = NULL;
+  SDL_Surface *surface = IMG_Load(path.c_str());
+  if (surface == NULL) {
+    printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(),
+           IMG_GetError());
+  } else {
+    texture =
+        SDL_CreateTextureFromSurface(game.get_renderer(), surface);
+    if (texture == NULL) {
+      printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(),
+             SDL_GetError());
+    }
+    SDL_FreeSurface(surface);
+  }
+  return texture;
 }
 
 void RenderSystem::renderAll() {
@@ -63,7 +80,7 @@ void RenderSystem::renderAll() {
         dest.w = sprite.rect.w;
         dest.h = sprite.rect.h;
         // Render entity's sprite to screen, with rotation around the sprite's center
-        SDL_RenderCopyEx(renderer_, sprite.spritesheet, &(sprite.rect), &dest,
+        SDL_RenderCopyEx(renderer_, spritesheet_, &(sprite.rect), &dest,
                         p.rotation * 180 / M_PI, NULL, SDL_FLIP_NONE);
     }
 

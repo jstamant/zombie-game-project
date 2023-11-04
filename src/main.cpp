@@ -19,7 +19,6 @@
 #include "ai.h"
 #include "defines.h"
 #include "entitymanager.h"
-#include "functions.h"
 #include "game.h"
 #include "inputsystem.h"
 #include "physics.h"
