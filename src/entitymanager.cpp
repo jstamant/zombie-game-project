@@ -61,8 +61,8 @@ entt::entity EntityManager::createPlayer(void) {
   auto s = registry_->emplace<Sprite>(player);
   auto p = registry_->emplace<Position>(player, WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 0);
   SDL_Rect box;
-  box.x = p.x - s.offsetX;
-  box.y = p.y - s.offsetY;
+  box.x = p.x - s.offset.x;
+  box.y = p.y - s.offset.y;
   box.w = s.rect.w;
   box.h = s.rect.h;
   registry_->emplace<HitBox>(player, box);
@@ -81,8 +81,8 @@ entt::entity EntityManager::createZombie(entt::entity target) {
   Position p = registry_->emplace<Position>(zombie, WINDOW_WIDTH + 100,
                                             rand() % WINDOW_HEIGHT);
   SDL_Rect box;
-  box.x = p.x - s.offsetX;
-  box.y = p.y - s.offsetY;
+  box.x = p.x - s.offset.x;
+  box.y = p.y - s.offset.y;
   box.w = s.rect.w;
   box.h = s.rect.h;
   registry_->emplace<HitBox>(zombie, box);
@@ -102,8 +102,8 @@ entt::entity EntityManager::create_ammo(void) {
   p.x = rand() % WINDOW_WIDTH;
   p.y = rand() % WINDOW_HEIGHT;
   SDL_Rect box;
-  box.x = p.x - s.offsetX;
-  box.y = p.y - s.offsetY;
+  box.x = p.x - s.offset.x;
+  box.y = p.y - s.offset.y;
   box.w = s.rect.w;
   box.h = s.rect.h;
   registry_->emplace<HitBox>(ammo, box);

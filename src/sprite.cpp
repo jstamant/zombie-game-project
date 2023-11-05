@@ -12,8 +12,8 @@
 
 Sprite::Sprite() {
   // Centered for a 32x32 pixel sprite by default
-  offsetX = 16;
-  offsetY = 16;
+  offset.x = 16;
+  offset.y = 16;
   // Default sprite is the player sprite
   row_ = 0;
   frame_ = 0;

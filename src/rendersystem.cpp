@@ -75,8 +75,8 @@ void RenderSystem::renderAll() {
         Sprite sprite = view.get<Sprite>(entity);
         Position p = view.get<Position>(entity);
         SDL_Rect dest;
-        dest.x = (int)p.x - (int)sprite.offsetX - camera_.x + WINDOW_WIDTH / 2;
-        dest.y = (int)p.y - (int)sprite.offsetY - camera_.y + WINDOW_HEIGHT / 2;
+        dest.x = (int)p.x - (int)sprite.offset.x - camera_.x + WINDOW_WIDTH / 2;
+        dest.y = (int)p.y - (int)sprite.offset.y - camera_.y + WINDOW_HEIGHT / 2;
         dest.w = sprite.rect.w;
         dest.h = sprite.rect.h;
         // Render entity's sprite to screen, with rotation around the sprite's center

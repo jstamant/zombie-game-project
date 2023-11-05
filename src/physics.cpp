@@ -151,8 +151,8 @@ void Physics::apply_velocities(void) {
     Position &p = ecs_->get<Position>(entity);
     Sprite &s = ecs_->get<Sprite>(entity);
     ecs_->patch<HitBox>(entity, [&p, &s](auto &b) {
-      b.x = p.x - s.offsetX;
-      b.y = p.y - s.offsetY;
+      b.x = p.x - s.offset.x;
+      b.y = p.y - s.offset.y;
     });
     ecs_->patch<Velocity>(entity, [](auto &v) { v.reset(); });
   }
