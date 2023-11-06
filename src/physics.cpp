@@ -233,9 +233,12 @@ void Physics::onNotify(entt::entity entity, Event event) {
     if (collision) {
       Health &h = ecs_->get<Health>(closest);
       h.health -= 20;
+      if (h.health < 100) {
+        ecs_->get<Sprite>(closest).setFrame(1);
+      }
       if (h.health <= 0) {
         std::cout << "Destroying zombie..." << std::endl;
-        // TODO decouple this to an event queue, and add graphics for hurt zombies
+        // TODO decouple this to an event queue
         ecs_->destroy(closest);
       }
       // Shortening the bullet line
