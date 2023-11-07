@@ -2,10 +2,11 @@
 // physics.cpp
 //******************************************************************************
 
-#include <cmath>
-#include <forward_list>
 #include <SDL2/SDL.h>
+#include <cmath>
 #include <entt/entt.hpp>
+#include <forward_list>
+#include <iostream>
 
 #include "ai.h"
 #include "controllable.h"
@@ -22,9 +23,6 @@
 #include "type.h"
 #include "velocity.h"
 
-// DEBUG
-#include <iostream>
-#include <sys/types.h>
 
 Physics::Physics(entt::registry* registry) {
   ecs_ = registry;
@@ -186,60 +184,58 @@ void Physics::onNotify(entt::entity entity, Event event) {
       bullet_bounds.h = l.y1 - l.y2;
     }
 
-    auto view = ecs_->view<AI>();
-    entt::entity closest;
+    entt::entity closest_colliding_entity = entt::null;
     double closest_distance = HUGE_VAL;
-    double distance;
-    bool collision = false;
-    for (entt::entity zombie : view) {
+
+    std::forward_list<Collision> list;
+    list = find_collisions_to<AI>(bullet_bounds);
+    for (Collision pair : list) {
+      entt::entity zombie = pair.second;
       HitBox box = ecs_->get<HitBox>(zombie);
       Position p = ecs_->get<Position>(zombie);
-      if (calc_collision(bullet_bounds, box)) {
-        bool inside1 = point_circle({l.x1, l.y1}, {(int)p.x, (int)p.y}, 32);
-        bool inside2 = point_circle({l.x2, l.y2}, {(int)p.x, (int)p.y}, 32);
-        if (inside1 || inside2) {
-          collision = true; // Indicates collision with ends of the line
-          distance = sqrt(pow(l.x1 - p.x, 2) + pow(l.y1 - p.y, 2));
-          closest = zombie;
-          closest_distance = distance;
-          collision = true;
-          if (distance <= 32) { // Indicates that the zombie is ON the player
-            break;
-          }
+      bool inside1 = point_circle({l.x1, l.y1}, {(int)p.x, (int)p.y}, 32);
+      bool inside2 = point_circle({l.x2, l.y2}, {(int)p.x, (int)p.y}, 32);
+      if (inside1 || inside2) {
+        // Indicates collision with ends of the line
+        double distance = sqrt(pow(l.x1 - p.x, 2) + pow(l.y1 - p.y, 2));
+        closest_colliding_entity = zombie;
+        closest_distance = distance;
+        if (distance <= 16) { // Indicates that the zombie is ON the player
+          break;
         }
-        float length = sqrt(pow(l.x2 - l.x1, 2) + pow(l.y2 - l.y1, 2));
-        float dot =
-            (((p.x - l.x1) * (l.x2 - l.x1)) + ((p.y - l.y1) * (l.y2 - l.y1))) /
-            pow(length, 2);
-        float closest_x = l.x1 + (dot * (l.x2 - l.x1));
-        float closest_y = l.y1 + (dot * (l.y2 - l.y1));
-        bool on_segment = line_point(l.x1, l.y1, l.x2, l.y2, closest_x, closest_y);
-        // TODO the wrong zombie is sometimes hit, due to how it calculates the point onto the segment
-        if (on_segment) { // Indicates that the closest point is within the length of the line
-          distance = sqrt(pow(closest_x - p.x, 2) + pow(closest_y - p.y, 2));
-          if (distance <= 32) { // Indicates that the closest point collides ON the line
-            collision = true;
-            //Get the exact collision point
-            // TODO the exact point is not calculated properly
-            distance = sqrt(pow(closest_x - l.x1, 2) + pow(closest_y - l.y1, 2));
-            if (distance < closest_distance) { // If the collision point is closer than any other collision
-              closest_distance = distance;
-              closest = zombie;
-            }
-          }
+      }
+      float length = sqrt(pow(l.x2 - l.x1, 2) + pow(l.y2 - l.y1, 2));
+      float dot =
+          (((p.x - l.x1) * (l.x2 - l.x1)) + ((p.y - l.y1) * (l.y2 - l.y1))) /
+          pow(length, 2);
+      float closest_x = l.x1 + (dot * (l.x2 - l.x1));
+      float closest_y = l.y1 + (dot * (l.y2 - l.y1));
+      double distance_to_line = sqrt(pow(closest_x - p.x, 2) + pow(closest_y - p.y, 2));
+      if (distance_to_line <= 16) {
+        // Indicates that the cicle is close enough to be an ACTUAL collision
+        // Get the exact collision point
+        double distance_to_target = sqrt(pow(closest_x - l.x1, 2) + pow(closest_y - l.y1, 2));
+        // This formula is to calculate the actual hit location on a circle target
+        double distance_to_impact =
+            distance_to_target - 16 * cos(distance_to_line / 16 * M_PI_2);
+        // If the collision point is closer than any other collision
+        if (distance_to_impact < closest_distance) {
+          closest_distance = distance_to_impact;
+          closest_colliding_entity = zombie;
         }
       }
     }
-    if (collision) {
-      Health &h = ecs_->get<Health>(closest);
+
+    if (ecs_->valid(closest_colliding_entity)) {
+      Health &h = ecs_->get<Health>(closest_colliding_entity);
       h.health -= 20;
       if (h.health < 100) {
-        ecs_->get<Sprite>(closest).setFrame(1);
+        ecs_->get<Sprite>(closest_colliding_entity).setFrame(1);
       }
       if (h.health <= 0) {
         std::cout << "Destroying zombie..." << std::endl;
         // TODO decouple this to an event queue
-        ecs_->destroy(closest);
+        ecs_->destroy(closest_colliding_entity);
       }
       // Shortening the bullet line
       l.x2 = l.x1 + closest_distance * cos(angle);
@@ -299,4 +295,21 @@ std::forward_list<Collision> Physics::find_collisions(void) {
     }
   }
   return collisions;
+}
+
+/* Returns a list of all collisions with an entity. It uses the template
+   parameter to determine what kinds of entities it will check against. The
+   source entity must have a hitbox component. Return type is a Collision List,
+   which is a list of pairs, where the first entity is the source, and the
+   second entity is the colliding entity. */
+template <typename T>
+std::forward_list<Collision> Physics::find_collisions_to(SDL_Rect src) {
+  std::forward_list<Collision> list;
+  auto view = ecs_->view<T>();
+  for (entt::entity entity : view) {
+    if (calc_collision(src, ecs_->get<HitBox>(entity))) {
+      list.push_front({entt::null, entity});
+    }
+  }
+  return list;
 }

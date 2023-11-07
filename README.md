@@ -1,5 +1,7 @@
 # Zombie Game Project
 
+TODO to implement a style guide
+
 This game is a 2D top-down zombie-survival game.
 
 Although not yet implemented, the goal is to establish yourself in a
@@ -33,9 +35,10 @@ a list of the main gameplay elements:
 
 * Movement
 * Zombies
-* ~~Shooting~~
+* Shooting
 * Health
-* ~~Ammunition~~
+* Ammunition
+* Scrolling view
 
 ## Planned features
 
