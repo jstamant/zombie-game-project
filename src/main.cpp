@@ -28,32 +28,24 @@
 
 //Make these variables global for now...
 Game game;
-SDL_Event event_queue_;              //The event queue for the entire game
-SDL_Texture* gTextTexture = NULL;
-TTF_Font* gFont = NULL;
 
 // TODO - move these functions, they shouldn't really be global
 //Frees media and shuts down SDL
 SDL_Surface* loadSurface(std::string);
-bool loadMedia(void);
 
 int main(void)
 {
+  // Start up SDL and create the window
+  if (!game.initializeSDL())
+    printf("Failed to initialize SDL!\n");
+
   entt::registry registry;
   EntityManager entitymanager(&registry);
   int enemy_spawn = 0;
   int ammo_spawn = 0;
   srand(time(NULL));
 
-  // Start up SDL and create the window
-  if (!game.initializeSDL())
-    printf("Failed to initialize SDL!\n");
   RenderSystem render_system(game.get_renderer(), &registry);
-  // Initialize SDL_ttf
-  if (TTF_Init() == -1) {
-    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-  }
-  loadMedia();
 
   // Initialize some system(s)
   Physics physics(&registry);
@@ -118,24 +110,3 @@ SDL_Surface* loadSurface(std::string path)
     return optimizedSurface;
 }
 
-bool loadMedia() {
-    // Loading success flag
-    bool success = true;
-
-    // Open the font
-    gFont = TTF_OpenFont("arial.ttf", 28);
-    if (gFont == NULL) {
-      printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-      success = false;
-    } else {
-      // Render text
-      SDL_Color textColor = {0, 0, 0};
-      loadFromRenderedText("testing!", textColor);
-      if (!gTextTexture) {
-            printf("Failed to render text texture!\n");
-            success = false;
-      }
-    }
-
-    return success;
-}

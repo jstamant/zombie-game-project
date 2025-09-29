@@ -19,14 +19,26 @@ RenderSystem::RenderSystem(SDL_Renderer *renderer, entt::registry *registry) {
   ecs_ = registry;
   camera_ = {0, 0};
 
-  spritesheet_ = loadTexture("spritesheet.png");
+  font_ = NULL;
+  font_ = TTF_OpenFont("arial.ttf", 24);
+  if (font_ == NULL) {
+    printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+  }
+  printf("Font loaded successfully.\n");
+  text_color = {0, 0, 0};
+  ui.health_indicator = load_surface_from_text("HEALTH:");
+  ui.health = load_surface_from_text("100");
+  ui.ammo_indicator = load_surface_from_text("AMMO:");
+  ui.ammo = load_surface_from_text("20");
+
+  spritesheet_ = load_image("spritesheet.png");
   if (spritesheet_ == NULL) // Not sure if this works as intended
     std::cout << "Failed to load spritesheet" << std::endl;
   std::cout << "Loaded spritesheet successfully" << std::endl;
   // TODO - NEED TO FREE THIS TEXTURE ON DESTRUCTION
 }
 
-SDL_Texture *RenderSystem::loadTexture(std::string path) {
+SDL_Texture *RenderSystem::load_image(std::string path) {
   SDL_Texture *texture = NULL;
   SDL_Surface *surface = IMG_Load(path.c_str());
   if (surface == NULL) {
@@ -44,7 +56,18 @@ SDL_Texture *RenderSystem::loadTexture(std::string path) {
   return texture;
 }
 
-void RenderSystem::renderAll() {
+SDL_Surface *RenderSystem::load_surface_from_text(std::string text) {
+  SDL_Surface *surface = NULL;
+  surface = TTF_RenderText_Solid(font_, text.c_str(), text_color);
+  if (surface == NULL) {
+    printf("Unable to render text surface! SDL_ttf Error: %s\n",
+           TTF_GetError());
+  }
+  printf("Text surface loaded.\n");
+  return surface;
+}
+
+void RenderSystem::renderAll(void) {
     // TODO need to implement some global coordinates and camera coordinates system
     // Start by clearing the screen, filling it with a placeholder color
     SDL_SetRenderDrawColor(renderer_, 0xaa, 0xaa, 0xaa, SDL_ALPHA_OPAQUE);
@@ -99,43 +122,29 @@ void RenderSystem::renderAll() {
     SDL_RenderDrawRect(renderer_, &bounds2);
     SDL_RenderDrawRect(renderer_, &bounds3);
 
-    // TESTING render text to screen
-    SDL_Rect src = {0, 0, WINDOW_WIDTH, 50};
-    SDL_Rect dest = {0, 0, WINDOW_WIDTH, 50};
-    SDL_RenderCopy(renderer_, gTextTexture, &src, &dest);
+    // Render the UI
+    SDL_Texture *test =
+      SDL_CreateTextureFromSurface(renderer_, ui.health_indicator);
+    SDL_Rect src = {0, 0, ui.health_indicator->w, ui.health_indicator->h};
+    SDL_Rect dest = {4, 4, ui.health_indicator->w, ui.health_indicator->h};
+    SDL_RenderCopy(renderer_, test, &src, &dest);
+    SDL_DestroyTexture(test);
+    test = SDL_CreateTextureFromSurface(renderer_, ui.health);
+    src = {0, 0, ui.health->w, ui.health->h};
+    dest = {120, 4, ui.health->w, ui.health->h};
+    SDL_RenderCopy(renderer_, test, &src, &dest);
+    SDL_DestroyTexture(test);
+    test = SDL_CreateTextureFromSurface(renderer_, ui.ammo_indicator);
+    src = {0, 0, ui.ammo_indicator->w, ui.ammo_indicator->h};
+    dest = {4, 36, ui.ammo_indicator->w, ui.ammo_indicator->h};
+    SDL_RenderCopy(renderer_, test, &src, &dest);
+    SDL_DestroyTexture(test);
+    test = SDL_CreateTextureFromSurface(renderer_, ui.ammo);
+    src = {0, 0, ui.ammo->w, ui.ammo->h};
+    dest = {120, 36, ui.ammo->w, ui.ammo->h};
+    SDL_RenderCopy(renderer_, test, &src, &dest);
+    SDL_DestroyTexture(test);
 
-    //Push the composed frame to the screen
+    // Push the composed frame to the screen
     SDL_RenderPresent(renderer_);
-}
-
-/* TODO I need to improve the loading of surfaces/textures. It's a mess, right
-   now. And I need to make my own class for texture, along with member
-   functions. */
-bool loadFromRenderedText(std::string textureText, SDL_Color textColor) {
-  // Get rid of preexisting texture
-  // free();
-  // Render text surface
-  SDL_Surface *textSurface =
-      TTF_RenderText_Solid(gFont, textureText.c_str(), textColor);
-  if (textSurface == NULL) {
-    printf("Unable to render text surface! SDL_ttf Error: %s\n",
-           TTF_GetError());
-  } else {
-    // Create texture from surface pixels
-    gTextTexture = SDL_CreateTextureFromSurface(game.get_renderer(), textSurface);
-    if (gTextTexture == NULL) {
-      printf("Unable to create texture from rendered text! SDL Error: %s\n",
-             SDL_GetError());
-    } else {
-      // Get image dimensions
-      // mWidth = textSurface->w;
-      // mHeight = textSurface->h;
-    }
-
-    // Get rid of old surface
-    // SDL_FreeSurface(textSurface);
-  }
-
-  // Return success
-  return gTextTexture != NULL;
 }

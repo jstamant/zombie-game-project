@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "defines.h"
 #include "game.h"
@@ -27,6 +28,7 @@ void Game::close(void) {
   // Quit SDL subsystems
   IMG_Quit();
   SDL_Quit();
+  TTF_Quit();
 }
 
 SDL_Event *Game::get_event_queue(void) { return &event_queue_; }
@@ -35,7 +37,6 @@ SDL_Surface *Game::get_surface(void) { return surface_; }
 SDL_Window *Game::get_window(void) { return window_; }
 
 /* Initialize SDL, and create a window.
-   TODO move globals into this class
  */
 bool Game::initializeSDL(void)
 {
@@ -62,14 +63,26 @@ bool Game::initializeSDL(void)
     }
     //Initialize renderer color
     SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
-    //Initialize PNG loading
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
-    {
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+    // Get window surface
+    surface_ = SDL_GetWindowSurface(window_);
+
+    printf("SDL has been initialized.\n");
+
+    // Initialize PNG loading
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        printf("SDL_image could not initialize! SDL_image Error: %s\n",
+               IMG_GetError());
         return false;
     }
-    //Get window surface
-    surface_ = SDL_GetWindowSurface(window_);
+    printf("SDL_image has been initialized.\n");
+
+    // Initialize SDL_ttf
+    if (TTF_Init() != 0) {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n",
+               TTF_GetError());
+    }
+    printf("SDL_ttf has been initialized.\n");
+
     return true;
 }
 

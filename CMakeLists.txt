@@ -1,9 +1,19 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(sdl-app.out CXX)
 
-message(STATUS "Project source directory is at ${PROJECT_SOURCE_DIR}")
-message(STATUS "cmake binary directory is at ${CMAKE_BINARY_DIR}")
-message(STATUS "cmake source directory is at ${CMAKE_SOURCE_DIR}")
+message(STATUS "$PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "$CMAKE_BINARY_DIR:   ${CMAKE_BINARY_DIR}")
+message(STATUS "$CMAKE_SOURCE_DIR:   ${CMAKE_SOURCE_DIR}")
+
+# Pulled from https://thatonegamedev.com/cpp/programming-a-c-game-for-the-web-emscripten/
+if (EMSCRIPTEN)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY")
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif ()
+
+message(STATUS "$CMAKE_EXECUTABLE_SUFFIX: ${CMAKE_EXECUTABLE_SUFFIX}")
+message(STATUS "$EMSCRIPTEN: ${EMSCRIPTEN}")
 
 # The binary needs to be adjacent to the assets, so this is set its location accordingly
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})

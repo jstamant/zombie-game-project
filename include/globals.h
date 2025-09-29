@@ -9,7 +9,4 @@
 // Forward declerations of global variables
 extern Game game;
 
-extern SDL_Texture *gTextTexture;
-extern TTF_Font* gFont;
-
 #endif //_GLOBALS_H_

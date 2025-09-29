@@ -8,7 +8,7 @@ class Game {
 public:
   Game();
   bool running;
-  int ammo = 20;
+  int ammo = 100;
   void close(void);
   SDL_Event *get_event_queue(void);
   SDL_Renderer *get_renderer(void);
